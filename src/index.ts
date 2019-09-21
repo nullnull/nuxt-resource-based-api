@@ -38,20 +38,32 @@ export interface Options {
   actionConfig?: ActionConfig
 }
 
-export function createResourceStore(
-  resource: string,
-  actions: Action[],
-  options: Options = {},
-) {
-  const extention = options.extention || {}
-  return {
-    state: () => generateInitialState(resource, actions, extention.state),
-    mutations: generateMutations(resource, actions, extention.mutations),
-    actions: generateActionsWithAuth(
-      resource,
-      actions,
-      extention.actions,
-      options.actionConfig || {}
-    )
+function defaultRequestCallback(method, path, token, obj = {}) {
+  console.log('defaultRequestCallback');
+  console.log([method, path, token]);
+}
+
+export default {
+  requestCallback: defaultRequestCallback,
+  setConfig(config) {
+    this.requestCallback = config.requestCallback
+  },
+  createStore(
+    resource: string,
+    actions: Action[],
+    options: Options = {},
+  ) {
+    const extention = options.extention || {}
+    return {
+      state: () => generateInitialState(resource, actions, extention.state),
+      mutations: generateMutations(resource, actions, extention.mutations),
+      actions: generateActionsWithAuth(
+        resource,
+        actions,
+        this.requestCallback,
+        extention.actions,
+        options.actionConfig || {}
+      )
+    }
   }
 }

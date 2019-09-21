@@ -9,31 +9,10 @@ import {
 } from '../util'
 import { Action, ActionConfig, ActionExtension } from '../index'
 
-import axios from 'axios'
-
-async function requestWithToken(method, path, token, obj = {}) {
-  if (!token) {
-    throw 401
-  }
-
-  if (['get', 'delete'].includes(method)) {
-    return await axios[method](`${process.env.apiUrl}/api/${path}`, {
-      headers: {
-        Authorization: token
-      }
-    })
-  } else {
-    return await axios[method](`${process.env.apiUrl}/api/${path}`, obj, {
-      headers: {
-        Authorization: token
-      }
-    })
-  }
-}
-
 export default function generateActionsWithAuth(
   resource: string,
   actions: Action[],
+  requestCallback: Function,
   extention: ActionExtension = {},
   options: ActionConfig = {}
 ) {
@@ -62,7 +41,7 @@ export default function generateActionsWithAuth(
       if (!state.shouldRefreshIndexState && !force) {
         return
       }
-      const { data } = await requestWithToken(
+      const { data } = await requestCallback(
         'get',
         generatePathWithQuery(resources, query),
         token
@@ -79,7 +58,7 @@ export default function generateActionsWithAuth(
       if (!state.shouldRefreshShowState && !force) {
         return
       }
-      const { data } = await requestWithToken(
+      const { data } = await requestCallback(
         'get',
         camelTo_snake(resource),
         token
@@ -107,7 +86,7 @@ export default function generateActionsWithAuth(
         if (hasResource && !state.shouldRefreshShowState && !force) {
           return
         }
-        const { data } = await requestWithToken(
+        const { data } = await requestCallback(
           'get',
           `${camelTo_snake(resources)}/${id}`,
           token
@@ -132,7 +111,7 @@ export default function generateActionsWithAuth(
         }
         commit('initializeEditingData', cloneDeep(state[resource]))
       } else {
-        const { data } = await requestWithToken(
+        const { data } = await requestCallback(
           'get',
           `${camelTo_snake(resource)}/edit`,
           token
@@ -143,7 +122,7 @@ export default function generateActionsWithAuth(
     async update({ commit, state }, { token: token }) {
       const obj = changeCaseObject.snakeCase(state[editingName])
       const url = isSingular ? `${camelTo_snake(resource)}` : `${camelTo_snake(resources)}/${state[editingName].id}`
-      const { data } = await requestWithToken(
+      const { data } = await requestCallback(
         'put',
         url,
         token,
@@ -170,7 +149,7 @@ export default function generateActionsWithAuth(
     },
     async create({ commit, state }, { token: token }) {
       const obj = changeCaseObject.snakeCase(state[initializingName])
-      const { data } = await requestWithToken(
+      const { data } = await requestCallback(
         'post',
         camelTo_snake(resources),
         token,
@@ -189,7 +168,7 @@ export default function generateActionsWithAuth(
 
   const destroyAction = {
     async destroy({ commit }, { id: id, token: token }) {
-      await requestWithToken(
+      await requestCallback(
         'delete',
         `${camelTo_snake(resources)}/${id}`,
         token
