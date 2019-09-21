@@ -66,6 +66,9 @@ export default function generateActionsWithAuth(
         camelTo_snake(resource),
         query,
         headers,
+        {
+          isSingular: isSingular
+        }
       )
       commit('setShowResponse', data)
     },
@@ -95,6 +98,9 @@ export default function generateActionsWithAuth(
           camelTo_snake(resource),
           { ...query, id: id },
           headers,
+          {
+            isSingular: isSingular
+          }
         )
         commit('setShowResponse', data)
       }
@@ -121,6 +127,9 @@ export default function generateActionsWithAuth(
           camelTo_snake(resource),
           { ...query, id: id },
           headers,
+          {
+            isSingular: isSingular
+          }
         )
         commit('initializeEditingData', cloneDeep(data))
       }
@@ -133,6 +142,9 @@ export default function generateActionsWithAuth(
         camelTo_snake(resource),
         query,
         headers,
+        {
+          isSingular: isSingular
+        },
         { [camelTo_snake(resource)]: obj }
       )
 
@@ -161,6 +173,9 @@ export default function generateActionsWithAuth(
         camelTo_snake(resource),
         query,
         headers,
+        {
+          isSingular: isSingular
+        },
         { [camelTo_snake(resource)]: obj }
       )
 
@@ -181,6 +196,9 @@ export default function generateActionsWithAuth(
         camelTo_snake(resource),
         { ...query, id: id },
         headers,
+        {
+          isSingular: isSingular
+        }
       )
       commit('removeRcordInIndexState', id)
     }
