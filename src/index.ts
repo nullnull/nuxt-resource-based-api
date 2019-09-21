@@ -2,6 +2,7 @@ import generateInitialState from './store/state'
 import generateMutations from './store/mutation'
 import generateActionsWithAuth from './store/action'
 import defaultRequestCallback from './default/requestCallback'
+import { resourcefulComponent, resourcefulPageComponent } from './component'
 
 export type Action = 'index' | 'show' | 'new' | 'create' | 'edit' | 'update' | 'destroy'
 
@@ -52,6 +53,8 @@ const Vapi = {
       throw 'requestCallback or apiUrl must be defined'
     }
   },
+  createComponent: resourcefulComponent,
+  createPageComponent: resourcefulPageComponent,
   createStore(
     resource: string,
     actions: Action[],
