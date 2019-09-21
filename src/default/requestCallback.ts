@@ -26,9 +26,6 @@ function generatePathWithQuery(resources: string, query: object | undefined) {
 
 export default function(apiUrl) {
     return async function (action, resource, query, headers, options, obj = {}) {
-        console.log('defaultCallback');
-        console.log(apiUrl);
-
         const method = actionToMethod[action]
         if (action === 'index') {
             return await axios[method](`${apiUrl}/${generatePathWithQuery(pluralize(resource), query)}`, {
