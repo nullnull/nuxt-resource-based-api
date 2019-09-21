@@ -6,7 +6,10 @@ module.exports = {
 
     output: {
         path: path.join(__dirname, "dist"),
-        filename: "index.js"
+        filename: "index.js",
+        library: 'Calc',
+        libraryTarget: 'umd',
+        globalObject: 'typeof self !== \'undefined\' ? self : this'
     },
 
     module: {
