@@ -20,5 +20,8 @@
     "noImplicitThis": true,
     "noEmit": true,
     "baseUrl": ".",
+    "types": [
+      "@types/node"
+    ]
   }
 }
