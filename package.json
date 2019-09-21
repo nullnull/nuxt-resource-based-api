@@ -1,9 +1,12 @@
 {
   "name": "vuex-resource-based-api",
-  "version": "0.0.1",
+  "version": "0.0.8",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "tsc": "tsc",
+    "build": "webpack && cp -f src/index.d.ts dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,5 +21,18 @@
   "bugs": {
     "url": "https://github.com/nullnull/vuex-resource-based-api/issues"
   },
-  "homepage": "https://github.com/nullnull/vuex-resource-based-api#readme"
+  "homepage": "https://github.com/nullnull/vuex-resource-based-api#readme",
+  "dependencies": {
+    "@types/node": "^12.7.5",
+    "axios": "^0.19.0",
+    "change-case-object": "^2.0.0",
+    "lodash": "^4.17.15",
+    "pluralize": "^8.0.0"
+  },
+  "devDependencies": {
+    "ts-loader": "^6.1.2",
+    "typescript": "^3.6.3",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
+  }
 }
