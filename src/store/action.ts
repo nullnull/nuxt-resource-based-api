@@ -5,7 +5,6 @@ import {
   camelTo_snake,
   editingResourceName,
   initializingResourceName,
-  generatePathWithQuery
 } from '../util'
 import { Action, ActionConfig, ActionExtension } from '../index'
 
@@ -37,14 +36,18 @@ export default function generateActionsWithAuth(
   }
 
   const indexAction = {
-    async index({ commit, state }, { token: token, force: force, query: query }) {
+    async index({ commit, state }, { force: force, query: query, headers: headers }) {
       if (!state.shouldRefreshIndexState && !force) {
         return
       }
       const { data } = await requestCallback(
-        'get',
-        generatePathWithQuery(resources, query),
-        token
+        'index',
+        camelTo_snake(resource),
+        query,
+        headers,
+        {
+          isSingular: isSingular
+        }
       )
       commit('setIndexResponse', data)
     },
@@ -54,14 +57,15 @@ export default function generateActionsWithAuth(
   }
 
   const showActionForSingularResource = {
-    async show({ commit, state }, { token: token, force: force }) {
+    async show({ commit, state }, { force: force, query: query, headers: headers }) {
       if (!state.shouldRefreshShowState && !force) {
         return
       }
       const { data } = await requestCallback(
-        'get',
+        'show',
         camelTo_snake(resource),
-        token
+        query,
+        headers,
       )
       commit('setShowResponse', data)
     },
@@ -71,10 +75,10 @@ export default function generateActionsWithAuth(
   }
 
   const showActionForResources = {
-    async show({ commit, dispatch, state }, { id: id, token: token, force: force }) {
+    async show({ commit, dispatch, state }, { id: id, force: force, query: query, headers: headers }) {
       if (config.useIndexActionInShowAction) {
         if (state.shouldRefreshIndexState) {
-          await dispatch(`index`, { token: token })
+          await dispatch(`index`, { force: force, query: query, headers: headers })
         }
         const data = state[resources].find(x => x.id == id)
         if (data === undefined) {
@@ -87,9 +91,10 @@ export default function generateActionsWithAuth(
           return
         }
         const { data } = await requestCallback(
-          'get',
-          `${camelTo_snake(resources)}/${id}`,
-          token
+          'show',
+          camelTo_snake(resource),
+          { ...query, id: id },
+          headers,
         )
         commit('setShowResponse', data)
       }
@@ -100,32 +105,34 @@ export default function generateActionsWithAuth(
   }
 
   const editAction = {
-    async edit({ commit, dispatch, state }, { id: id, token: token }) {
+    async edit({ commit, dispatch, state }, { id: id, force: force, query: query, headers: headers }) {
       if (state[editingName] && state[editingName].id == id && !config.refreshPropertiesAlways) {
         return
       }
 
       if (config.useShowActionInEditAction) {
         if (!state[resource] || state[resource].id != id) {
-          await dispatch('show', { id: id, token: token })
+          await dispatch('show', { id: id, force: force, query: query, headers: headers })
         }
         commit('initializeEditingData', cloneDeep(state[resource]))
       } else {
         const { data } = await requestCallback(
-          'get',
-          `${camelTo_snake(resource)}/edit`,
-          token
+          'edit',
+          camelTo_snake(resource),
+          { ...query, id: id },
+          headers,
         )
         commit('initializeEditingData', cloneDeep(data))
       }
     },
-    async update({ commit, state }, { token: token }) {
+    async update({ commit, state }, { query: query, headers: headers }) {
       const obj = changeCaseObject.snakeCase(state[editingName])
       const url = isSingular ? `${camelTo_snake(resource)}` : `${camelTo_snake(resources)}/${state[editingName].id}`
       const { data } = await requestCallback(
-        'put',
-        url,
-        token,
+        'update',
+        camelTo_snake(resource),
+        query,
+        headers,
         { [camelTo_snake(resource)]: obj }
       )
 
@@ -147,12 +154,13 @@ export default function generateActionsWithAuth(
       const newObj = {}
       commit('initializeInitializingData', newObj)
     },
-    async create({ commit, state }, { token: token }) {
+    async create({ commit, state }, { query: query, headers: headers }) {
       const obj = changeCaseObject.snakeCase(state[initializingName])
       const { data } = await requestCallback(
-        'post',
-        camelTo_snake(resources),
-        token,
+        'create',
+        camelTo_snake(resource),
+        query,
+        headers,
         { [camelTo_snake(resource)]: obj }
       )
 
@@ -167,11 +175,12 @@ export default function generateActionsWithAuth(
   }
 
   const destroyAction = {
-    async destroy({ commit }, { id: id, token: token }) {
+    async destroy({ commit }, { id: id, query: query, headers: headers }) {
       await requestCallback(
-        'delete',
-        `${camelTo_snake(resources)}/${id}`,
-        token
+        'destroy',
+        camelTo_snake(resource),
+        { ...query, id: id },
+        headers,
       )
       commit('removeRcordInIndexState', id)
     }
