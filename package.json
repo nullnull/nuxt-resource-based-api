@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/nullnull/vuex-resource-based-api#readme",
   "dependencies": {
+    "change-case-object": "^2.0.0",
     "pluralize": "^8.0.0"
   }
 }
