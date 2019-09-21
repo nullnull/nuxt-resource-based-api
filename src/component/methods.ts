@@ -20,6 +20,13 @@ interface Generator {
   destroy: (resource: string) => { [x: string]: DestroyMethod }
 }
 
+// TODO
+declare module 'vue/types/vue' {
+  interface Vue {
+    $util: any
+  }
+}
+
 const errorHandler = (e: any, app: Vue) => {
   if (e === 401 || (e.response && e.response.status === 401)) {
     app.$util.notify(
