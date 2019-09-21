@@ -39,12 +39,18 @@ export interface Options {
   actionConfig?: ActionConfig
 }
 
-export default {
-  requestCallback: defaultRequestCallback,
+const Vapi = {
+  requestCallback() { throw 'requestCallback or apiUrl must be defined' },
   apiUrl: '',
   setConfig(config) {
-    this.apiUrl = config.apiUrl || this.apiUrl
-    this.requestCallback = config.requestCallback || this.requestCallback
+    if (config.requestCallback) {
+      this.requestCallback = config.requestCallback
+    } else if (config.apiUrl) {
+      this.apiUrl = config.apiUrl
+      this.requestCallback = defaultRequestCallback(this.apiUrl)
+    } else {
+      throw 'requestCallback or apiUrl must be defined'
+    }
   },
   createStore(
     resource: string,
@@ -65,3 +71,5 @@ export default {
     }
   }
 }
+
+export default Vapi
