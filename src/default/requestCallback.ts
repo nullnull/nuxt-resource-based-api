@@ -25,32 +25,32 @@ function generatePathWithQuery(resources: string, query: object | undefined) {
 }
 
 export default function(apiUrl) {
-    return async function (this: any, action, resource, query, headers, options, obj = {}) {
+    return async function (action, resource, query, headers, options, obj = {}) {
         console.log('defaultCallback');
         console.log(apiUrl);
 
         const method = actionToMethod[action]
         if (action === 'index') {
-            return await axios[method](`${this.apiUrl}/${generatePathWithQuery(pluralize(resource), query)}`, {
+            return await axios[method](`${apiUrl}/${generatePathWithQuery(pluralize(resource), query)}`, {
                 headers: headers
             })
         } else if (['create'].includes(action)) {
-            return await axios[method](`${this.apiUrl}/${pluralize(resource)}`, obj, {
+            return await axios[method](`${apiUrl}/${pluralize(resource)}`, obj, {
                 headers: headers
             })
         } else if (['show', 'destroy'].includes(action)) {
             const path = options.isSingular ? resource : `${pluralize(resource)}/${query.id}`
-            return await axios[method](`${this.apiUrl}/${path}`, {
+            return await axios[method](`${apiUrl}/${path}`, {
                 headers: headers
             })
         } else if (['edit'].includes(action)) {
             const path = options.isSingular ? `${pluralize(resource)}/edit` : `${pluralize(resource)}/${query.id}/edit`
-            return await axios[method](`${this.apiUrl}/${path}`, {
+            return await axios[method](`${apiUrl}/${path}`, {
                 headers: headers
             })
         } else if (['update'].includes(action)) {
             const path = options.isSingular ? `${pluralize(resource)}` : `${pluralize(resource)}/${query.id}`
-            return await axios[method](`${this.apiUrl}/${path}`, obj, {
+            return await axios[method](`${apiUrl}/${path}`, obj, {
                 headers: headers
             })
         } else {
