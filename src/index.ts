@@ -40,7 +40,7 @@ export interface Options {
 }
 
 const Vapi = {
-  requestCallback() { throw 'requestCallback or apiUrl must be defined' },
+  requestCallback(action, resource, query, headers, options, obj = {}): Promise<any> { throw 'requestCallback or apiUrl must be defined' },
   apiUrl: '',
   setConfig(config) {
     if (config.requestCallback) {
