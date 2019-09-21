@@ -13,15 +13,3 @@ export function editingResourceName(resource) {
 export function initializingResourceName(resource) {
   return snake_toCamel(`initializing_${resource}`)
 }
-
-const objectMap = function (obj: object, f: (any) => any) {
-  return Object.entries(obj).map(([k, v]) => f([k, v]))
-}
-
-export function generatePathWithQuery(resources: string, query: object | undefined) {
-  if (query === undefined) {
-    return camelTo_snake(resources)
-  } else {
-    return camelTo_snake(resources) + '?' + objectMap(query, ([k, v]) => `${k}=${v}`).join("&")
-  }
-}

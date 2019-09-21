@@ -1,6 +1,5 @@
 import pluralize from 'pluralize'
 import changeCaseObject from 'change-case-object'
-
 import { editingResourceName, initializingResourceName } from '../util'
 import { Action, MutationExtension } from '../index'
 
