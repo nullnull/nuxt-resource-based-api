@@ -1,0 +1,22 @@
+{
+  "name": "vuex-resource-based-api",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nullnull/vuex-resource-based-api.git"
+  },
+  "keywords": [
+    "vuex"
+  ],
+  "author": "nullnull",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nullnull/vuex-resource-based-api/issues"
+  },
+  "homepage": "https://github.com/nullnull/vuex-resource-based-api#readme"
+}
