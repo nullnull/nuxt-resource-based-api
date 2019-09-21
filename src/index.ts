@@ -1,6 +1,7 @@
 import generateInitialState from './store/state'
 import generateMutations from './store/mutation'
 import generateActionsWithAuth from './store/action'
+import defaultRequestCallback from './default/requestCallback'
 
 export type Action = 'index' | 'show' | 'new' | 'create' | 'edit' | 'update' | 'destroy'
 
@@ -39,9 +40,11 @@ export interface Options {
 }
 
 export default {
-  requestCallback() { throw 'requestCallback must be defined' },
+  requestCallback: defaultRequestCallback,
+  apiUrl: '',
   setConfig(config) {
-    this.requestCallback = config.requestCallback
+    this.apiUrl = config.apiUrl || this.apiUrl
+    this.requestCallback = config.requestCallback || this.requestCallback
   },
   createStore(
     resource: string,

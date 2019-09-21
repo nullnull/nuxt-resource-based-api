@@ -136,11 +136,10 @@ export default function generateActionsWithAuth(
     },
     async update({ commit, state }, { query: query, headers: headers }) {
       const obj = changeCaseObject.snakeCase(state[editingName])
-      const url = isSingular ? `${camelTo_snake(resource)}` : `${camelTo_snake(resources)}/${state[editingName].id}`
       const { data } = await requestCallback(
         'update',
         camelTo_snake(resource),
-        query,
+        isSingular ? query : { ...query, id: state[editingName].id },
         headers,
         {
           isSingular: isSingular
