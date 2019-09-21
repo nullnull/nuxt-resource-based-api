@@ -7,7 +7,7 @@ import {
   initializingResourceName,
   generatePathWithQuery
 } from '../util'
-import { Action, ActionConfig, ActionExtension } from '../../types'
+import { Action, ActionConfig, ActionExtension } from '../index'
 
 import axios from 'axios'
 

@@ -2,7 +2,7 @@ import pluralize from 'pluralize'
 import changeCaseObject from 'change-case-object'
 
 import { editingResourceName, initializingResourceName } from '../util'
-import { Action, MutationExtension } from '../../types'
+import { Action, MutationExtension } from '../index'
 
 export default function generateMutations(resource: string, actions: Action[], extension: MutationExtension = {}) {
   const indexMutation = {

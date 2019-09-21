@@ -1,7 +1,7 @@
 import pluralize from 'pluralize'
 
 import { editingResourceName, initializingResourceName } from '../util'
-import { Action, StateExtension, State } from '../../types'
+import { Action, StateExtension, State } from '../index'
 
 export default function generateInitialState(
   resource: string,

@@ -3,9 +3,11 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "tsc": "tsc",
-    "build": "webpack",
+    "build": "webpack && cp -f src/index.d.ts dist/",
+    "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
