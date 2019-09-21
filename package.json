@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/nullnull/vuex-resource-based-api/issues"
   },
-  "homepage": "https://github.com/nullnull/vuex-resource-based-api#readme"
+  "homepage": "https://github.com/nullnull/vuex-resource-based-api#readme",
+  "dependencies": {
+    "pluralize": "^8.0.0"
+  }
 }
