@@ -38,13 +38,8 @@ export interface Options {
   actionConfig?: ActionConfig
 }
 
-function defaultRequestCallback(method, path, token, obj = {}) {
-  console.log('defaultRequestCallback');
-  console.log([method, path, token]);
-}
-
 export default {
-  requestCallback: defaultRequestCallback,
+  requestCallback() { throw 'requestCallback must be defined' },
   setConfig(config) {
     this.requestCallback = config.requestCallback
   },
