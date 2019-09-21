@@ -38,7 +38,7 @@ export interface Options {
   actionConfig?: ActionConfig
 }
 
-export default function (
+export function createResourceStore(
   resource: string,
   actions: Action[],
   options: Options = {},
