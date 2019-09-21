@@ -25,6 +25,9 @@
     "pluralize": "^8.0.0"
   },
   "devDependencies": {
-    "typescript": "^3.6.3"
+    "ts-loader": "^6.1.2",
+    "typescript": "^3.6.3",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
   }
 }
