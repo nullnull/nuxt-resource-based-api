@@ -1,5 +1,4 @@
 import pluralize from 'pluralize'
-
 import { editingResourceName, initializingResourceName } from '../util'
 import { Action, StateExtension, State } from '../index'
 

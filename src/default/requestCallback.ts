@@ -14,13 +14,15 @@ function camelTo_snake(str) {
     return str.replace(/[A-Z]/g, match => '_' + match.toLowerCase())
 }
 
+const objectMap = function (obj: object, f: (any) => any) {
+    return Object.entries(obj).map(([k, v]) => f([k, v]))
+}
+
 function generatePathWithQuery(resources: string, query: object | undefined) {
     if (query === undefined) {
         return camelTo_snake(resources)
     } else {
-        // TODO
-        return camelTo_snake(resources)
-        // return camelTo_snake(resources) + '?' + query.objectMap(([k, v]) => `${k}=${v}`).join("&")
+        return camelTo_snake(resources) + '?' + objectMap(query, ([k, v]) => `${k}=${v}`).join("&") // TODO
     }
 }
 

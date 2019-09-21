@@ -6,7 +6,7 @@ import defaultRequestCallback from './default/requestCallback'
 export type Action = 'index' | 'show' | 'new' | 'create' | 'edit' | 'update' | 'destroy'
 
 export interface ActionExtension {
-  [k: string]: (ctx: any, payload: any) => void | Promise<void> // TODO ctxとpayloadの定義
+  [k: string]: (ctx: any, payload: any) => void | Promise<void> // TODO: Define types for ctx, payload
 }
 
 export interface MutationExtension {
@@ -14,10 +14,10 @@ export interface MutationExtension {
 }
 
 export interface StateExtension {
-  [k: string]: any // TODO ctxとpayloadの定義
+  [k: string]: any // TODO: Define types for ctx, payload
 }
 
-export interface State { // TODO 本来はresourceごとに定義すべき
+export interface State {
   [x: string]: any
 }
 
