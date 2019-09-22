@@ -1,10 +1,9 @@
 import { Context } from "vm";
-import { Resource } from "../component";
+import { Resource } from "../index";
 import VueRouter from "vue-router";
 import { Store } from "vuex/types/index";
 
-// method側で使うため、一応共通化しておいた。
-export async function _setResource(
+async function setResource(
   router: VueRouter,
   store: Store<any>,
   resource: string,
@@ -19,7 +18,7 @@ export async function _setResource(
         },
         id: id
       })
-    } else if (['index', 'new', 'show', 'edit'].includes(method)) { // isSingularなshow,editがここで呼び出される(isSingularではないがidを指定しない場合は、action側でエラーになる)
+    } else if (['index', 'new', 'show', 'edit'].includes(method)) {
       await store.dispatch(`${resource}/${method}`, {
         headers: {
           Authorization: store.state.session.token,
@@ -38,7 +37,6 @@ export async function _setResource(
       throw e
     }
   }
-
 }
 
 export default function generateFetch(resources: Resource[]) {
@@ -47,7 +45,7 @@ export default function generateFetch(resources: Resource[]) {
 
     for (var i = 0; i < resources.length; i++) {
       const r = resources[i]
-      await _setResource(app.router, store, r.resource, r.action, {
+      await setResource(app.router, store, r.resource, r.action, {
         id: query.id
       })
     }

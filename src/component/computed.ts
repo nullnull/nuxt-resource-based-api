@@ -1,25 +1,31 @@
 import pluralize from 'pluralize'
-import { mapState } from 'vuex'
-
 import { editingResourceName, initializingResourceName } from '../util'
-import { Resource } from '../component';
+import { Resource } from '../index';
 
-export default function generateComputed(this: any, resources: Resource[]) {
-  console.log('generateComputed');
-  console.log(this);
-  
+const generateComputed = (resources: Resource[]) => {
   return resources
     .map(r => {
+      let name = ""
       if (r.action === 'show') {
-        return mapState(r.resource, [r.resource])
+        name = r.resource
       } else if (r.action === 'index') {
-        return mapState(r.resource, [pluralize(r.resource)])
+        name = pluralize(r.resource)
       } else if (r.action === 'edit') {
-        return mapState(r.resource, [editingResourceName(r.resource)])
+        name = editingResourceName(r.resource)
       } else if (r.action === 'new') {
-        return mapState(r.resource, [initializingResourceName(r.resource)])
+        name = initializingResourceName(r.resource)
+      }
+      // const src = `({
+      //   ${name}() { console.log('this'); console.log(this); return this.$store.state.${r.resource}.${name} }
+      // })`
+      // console.log(src);
+      // return eval(src)
+      return {
+        [name]: () => { return this.$store.state[r.resource][name] }
       }
     })
     .filter(x => x)
     .reduce((acc, x) => Object.assign(x, acc), {})
 }
+
+export default generateComputed

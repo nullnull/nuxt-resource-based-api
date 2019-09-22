@@ -1,4 +1,4 @@
-import { Resource } from "../component"
+import { Resource } from "../index"
 import Vue from 'vue'
 import { snake_toCamel } from "../util"
 import pluralize from 'pluralize'
@@ -20,34 +20,28 @@ interface Generator {
   destroy: (resource: string) => { [x: string]: DestroyMethod }
 }
 
-// TODO
-declare module 'vue/types/vue' {
-  interface Vue {
-    $util: any
-  }
-}
-
 const errorHandler = (e: any, app: Vue) => {
-  if (e === 401 || (e.response && e.response.status === 401)) {
-    app.$util.notify(
-      'Salesforceのセッション情報が古くなっています。一度ログアウトしてください。',
-      'danger'
-    )
-  } else if (e === 404 || (e.response && e.response.status === 404)) {
-    if (process.env.NODE_ENV !== 'development') {
-      app.$router.push('/404')
-    } else {
-      throw e
-    }
-  } else if (e.response && e.response.status === 422) {
-    app.$util.notify('不正な入力です', 'danger')
-  } else if (e.response && e.response.status === 429) {
-    app.$util.notify('チームの誰かが更新済みです(5分間に1回のみ更新できます)', 'danger')
-  } else if (e.response && e.response.status === 500) {
-    app.$util.notify('サーバーでエラーが発生しました', 'danger')
-  } else {
-    throw e
-  }
+  // TODO
+  // if (e === 401 || (e.response && e.response.status === 401)) {
+  //   app.$util.notify(
+  //     'Salesforceのセッション情報が古くなっています。一度ログアウトしてください。',
+  //     'danger'
+  //   )
+  // } else if (e === 404 || (e.response && e.response.status === 404)) {
+  //   if (process.env.NODE_ENV !== 'development') {
+  //     app.$router.push('/404')
+  //   } else {
+  //     throw e
+  //   }
+  // } else if (e.response && e.response.status === 422) {
+  //   app.$util.notify('不正な入力です', 'danger')
+  // } else if (e.response && e.response.status === 429) {
+  //   app.$util.notify('チームの誰かが更新済みです(5分間に1回のみ更新できます)', 'danger')
+  // } else if (e.response && e.response.status === 500) {
+  //   app.$util.notify('サーバーでエラーが発生しました', 'danger')
+  // } else {
+  //   throw e
+  // }
 }
 
 const generator: Generator = {

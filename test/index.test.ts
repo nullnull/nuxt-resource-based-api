@@ -11,10 +11,4 @@ test('works fine', () => {
   console.log(state);
   console.log(mutations);
   console.log(actions);
-
-  const component = Vapi.createComponent([
-    { resource: 'article', action: 'index' }
-  ])
-  // console.log(component);
-  
 });

@@ -2,7 +2,9 @@ import generateInitialState from './store/state'
 import generateMutations from './store/mutation'
 import generateActionsWithAuth from './store/action'
 import defaultRequestCallback from './default/requestCallback'
-import { resourcefulComponent, resourcefulPageComponent } from './component'
+import generateComputed from './component/computed'
+import generateMethods from './component/methods'
+import generateFetch from './component/fetch'
 
 export type Action = 'index' | 'show' | 'new' | 'create' | 'edit' | 'update' | 'destroy'
 
@@ -40,7 +42,16 @@ export interface Options {
   actionConfig?: ActionConfig
 }
 
+export interface Resource {
+  resource: string
+  action: Action
+  options?: Options
+}
+
 const Vapi = {
+  generateComputed,
+  generateMethods,
+  generateFetch,
   requestCallback(action, resource, query, headers, options, obj = {}): Promise<any> { throw 'requestCallback or apiUrl must be defined' },
   apiUrl: '',
   setConfig(config) {
@@ -53,8 +64,6 @@ const Vapi = {
       throw 'requestCallback or apiUrl must be defined'
     }
   },
-  createComponent: resourcefulComponent,
-  createPageComponent: resourcefulPageComponent,
   createStore(
     resource: string,
     actions: Action[],
@@ -76,3 +85,4 @@ const Vapi = {
 }
 
 export default Vapi
+
