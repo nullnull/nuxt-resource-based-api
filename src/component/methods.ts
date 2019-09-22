@@ -128,7 +128,12 @@ const generator: Generator = {
   },
 }
 
-export default function generateMethods(resources: Resource[], { createHeaders, errorHandler }) {
+interface Callback {
+  createHeaders: (app: Vue) => object
+  errorHandler: (e: Error, app: Vue) => object
+}
+
+export default function generateMethods(resources: Resource[], { createHeaders, errorHandler }: Callback) {
   return resources.map(resource => {
     if (!generator[resource.action]) {
       return null

@@ -28,7 +28,12 @@ async function fetchResource(
   }
 }
 
-export default function generateFetch(resources: Resource[], { createHeaders, errorHandler }) {
+interface Callback {
+  createHeaders: (context: Context) => object
+  errorHandler: (e: Error, context: Context) => object
+}
+
+export default function generateFetch(resources: Resource[], { createHeaders, errorHandler }: Callback) {
   return async (context: Context) => {
     for (var i = 0; i < resources.length; i++) {
       const r = resources[i]
