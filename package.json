@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "build": "webpack && cp -f src/index.d.ts dist/",
     "prepare": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
