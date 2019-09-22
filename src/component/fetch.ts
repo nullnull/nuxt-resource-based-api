@@ -1,53 +1,38 @@
 import { Context } from "vm";
 import { Resource } from "../index";
-import VueRouter from "vue-router";
-import { Store } from "vuex/types/index";
 
-async function setResource(
-  router: VueRouter,
-  store: Store<any>,
+async function fetchResource(
   resource: string,
   method: string,
-  { id: id }
+  context: Context,
+  createHeaders?: Function,
+  errorHandler?: Function,
 ) {
+  const { store, router, query } = context
+  const id = query.id // TODO
+  const headers = createHeaders ? createHeaders(context) : {}
+
   try {
     if (['show', 'edit'].includes(method) && id !== undefined) {
       await store.dispatch(`${resource}/${method}`, {
-        headers: {
-          Authorization: store.state.session.token,
-        },
-        id: id
+        headers,
+        id
       })
     } else if (['index', 'new', 'show', 'edit'].includes(method)) {
       await store.dispatch(`${resource}/${method}`, {
-        headers: {
-          Authorization: store.state.session.token,
-        },
+        headers,
       })
     }
   } catch (e) {
-    if (e === 401 || (e.response && e.response.status === 401)) {
-      store.dispatch('session/logout', {}, { root: true })
-      router.push('/session/login')
-    } else if (e === 404 || (e.response && e.response.status === 404)) {
-      if (process.env.NODE_ENV !== 'development') {
-        router.push('/404')
-      }
-    } else {
-      throw e
-    }
+    errorHandler(e, context)
   }
 }
 
-export default function generateFetch(resources: Resource[]) {
+export default function generateFetch(resources: Resource[], { createHeaders, errorHandler }) {
   return async (context: Context) => {
-    const { app, query, store } = context
-
     for (var i = 0; i < resources.length; i++) {
       const r = resources[i]
-      await setResource(app.router, store, r.resource, r.action, {
-        id: query.id
-      })
+      await fetchResource(r.resource, r.action, context, createHeaders, errorHandler)
     }
   }
 }
