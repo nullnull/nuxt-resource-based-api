@@ -15,14 +15,11 @@ const generateComputed = (resources: Resource[]) => {
       } else if (r.action === 'new') {
         name = initializingResourceName(r.resource)
       }
-      // const src = `({
-      //   ${name}() { console.log('this'); console.log(this); return this.$store.state.${r.resource}.${name} }
-      // })`
-      // console.log(src);
-      // return eval(src)
-      return {
-        [name]: () => { return this.$store.state[r.resource][name] }
-      }
+      // Use eval to avoid binding `this` to this closure
+      const src = `({
+        ${name}() { return this.$store.state.${r.resource}.${name} }
+      })`
+      return eval(src)
     })
     .filter(x => x)
     .reduce((acc, x) => Object.assign(x, acc), {})
