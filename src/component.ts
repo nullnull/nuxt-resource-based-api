@@ -15,10 +15,14 @@ interface Methods {}
 interface Props {}
 
 export function resourcefulComponent<Resources>(resources: Array<Resource> = []) {
-  return Vue.extend<Data, Methods, Resources, Props>({
-    computed: generateComputed(resources) as unknown as Resources,
+  let attributes = {
+    _generateComputed: generateComputed,
     methods: generateMethods(resources) as unknown as Resources,
-  })
+    computed: {} as Resources,
+  }
+  attributes.computed = attributes._generateComputed(resources) as unknown as Resources,
+  delete attributes._generateComputed
+  return Vue.extend<Data, Methods, Resources, Props>(attributes)
 }
 
 export function resourcefulPageComponent<T>(resources: Array<Resource> = []) {
