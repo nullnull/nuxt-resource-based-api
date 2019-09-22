@@ -4,7 +4,10 @@ import { mapState } from 'vuex'
 import { editingResourceName, initializingResourceName } from '../util'
 import { Resource } from '../component';
 
-export default function generateComputed(resources: Resource[]) {
+export default function generateComputed(this: any, resources: Resource[]) {
+  console.log('generateComputed');
+  console.log(this);
+  
   return resources
     .map(r => {
       if (r.action === 'show') {
