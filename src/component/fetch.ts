@@ -15,12 +15,12 @@ async function fetchResource(
 
   try {
     if (['show', 'edit'].includes(action) && id !== undefined) {
-      await store.dispatch(createActionName(resource, action), {
+      await store.dispatch(`${resource}/${createActionName(resource, action)}`, {
         headers,
         id
       })
     } else if (['index', 'new', 'show', 'edit'].includes(action)) {
-      await store.dispatch(createActionName(resource, action), {
+      await store.dispatch(`${resource}/${createActionName(resource, action)}`, {
         headers,
       })
     }
