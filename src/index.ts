@@ -61,7 +61,7 @@ export interface Resource {
 // TODO
 type Context = any // TODO
 export interface Methods {
-  [x: string]: (app: Vue, id?: number) => Promise<any>
+  [x: string]: IndexMethod | ShowMethod | ShowMethodForSingular | NewMethod | CreateMethod | EditMethod | UpdateMethod | DestroyMethod
 }
 export interface MethodCallback {
   createHeaders: (app: Vue) => object

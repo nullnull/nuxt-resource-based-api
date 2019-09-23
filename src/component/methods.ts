@@ -7,7 +7,9 @@ interface Generator {
   index: (resource: string, callbacks: any) => { [x: string]: IndexMethod }
   show: (resource: string, callbacks: any) => { [x: string]: ShowMethod | ShowMethodForSingular }
   new: (resource: string, callbacks: any) => { [x: string]: NewMethod } & { [x: string]: CreateMethod }
+  create: (resource: string, callbacks: any) => { [x: string]: CreateMethod }
   edit: (resource: string, callbacks: any) => { [x: string]: EditMethod } & { [x: string]: UpdateMethod }
+  update: (resource: string, callbacks: any) => { [x: string]: UpdateMethod }
   destroy: (resource: string, callbacks: any) => { [x: string]: DestroyMethod }
 }
 
@@ -43,10 +45,10 @@ const generator: Generator = {
   },
   new(resource: string, { createHeaders, errorHandler }) {
     // new
-    const actionNameNew: string = createActionName(resource, 'new')
-    const methodNew = async function (force = false) {
+    const actionName: string = createActionName(resource, 'new')
+    const method = async function (force = false) {
       try {
-        await this.$store.dispatch(`${resource}/${actionNameNew}`, {
+        await this.$store.dispatch(`${resource}/${actionName}`, {
           headers: createHeaders(this),
           force: force
         })
@@ -54,29 +56,27 @@ const generator: Generator = {
         errorHandler(e, this)
       }
     }
-    // create
-    const actionNameCreate: string = createActionName(resource, 'create')
-    const methodCreate = async function (force = false) {
+    const createMethod = this.create(resource, { createHeaders, errorHandler })
+    return { [actionName]: method, ...createMethod }
+  },
+  create(resource: string, { createHeaders, errorHandler }) {
+    const actionName: string = createActionName(resource, 'create')
+    const method = async function (force = false) {
       try {
-        return await this.$store.dispatch(`${resource}/${actionNameCreate}`, {
+        return await this.$store.dispatch(`${resource}/${actionName}`, {
           headers: createHeaders(this),
         })
       } catch (e) {
         errorHandler(e, this)
       }
     }
-
-    return {
-      [actionNameNew]: methodNew,
-      [actionNameCreate]: methodCreate
-    }
+    return { [actionName]: method }
   },
   edit(resource: string, { createHeaders, errorHandler }) {
-    // edit
-    const actionNameEdit: string = createActionName(resource, 'edit')
-    const methodEdit = async function (id: number, force = false) {
+    const actionName: string = createActionName(resource, 'edit')
+    const method = async function (id: number, force = false) {
       try {
-        await this.$store.dispatch(`${resource}/${actionNameEdit}`, {
+        await this.$store.dispatch(`${resource}/${actionName}`, {
           headers: createHeaders(this),
           id: id,
           force: force
@@ -85,11 +85,14 @@ const generator: Generator = {
         errorHandler(e, this)
       }
     }
-    // update
-    const actionNameUpdate: string = createActionName(resource, 'update')
-    const methodUpdate = async function (id: number, force = false) {
+    const updateMethod = this.update(resource, { createHeaders, errorHandler })
+    return { [actionName]: method, ...updateMethod }
+  },
+  update(resource: string, { createHeaders, errorHandler }) {
+    const actionName: string = createActionName(resource, 'update')
+    const method = async function (id: number, force = false) {
       try {
-        return await this.$store.dispatch(`${resource}/${actionNameUpdate}`, {
+        return await this.$store.dispatch(`${resource}/${actionName}`, {
           headers: createHeaders(this),
           id: id,
         })
@@ -97,10 +100,7 @@ const generator: Generator = {
         errorHandler(e, this)
       }
     }
-    return {
-      [actionNameEdit]: methodEdit,
-      [actionNameUpdate]: methodUpdate
-    }
+    return { [actionName]: method }
   },
   destroy(resource: string, { createHeaders, errorHandler }) {
     const actionName: string = createActionName(resource, 'destroy')
