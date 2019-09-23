@@ -139,8 +139,7 @@ export default function generateActionsWithAuth(
   }
 
   const updateAction = {
-    async [createActionName(resource, 'update')]({ commit, state }, { query: query, headers: headers }) {
-      const obj = changeCaseObject.snakeCase(state[editingName])
+    async [createActionName(resource, 'update')]({ commit, state }, { query: query, headers: headers, record: record }) {
       const { data } = await requestCallback(
         'update',
         camelTo_snake(resource),
@@ -149,7 +148,7 @@ export default function generateActionsWithAuth(
         {
           isSingular: isSingular
         },
-        { [camelTo_snake(resource)]: obj }
+        { [camelTo_snake(resource)]: changeCaseObject.snakeCase(record || state[editingName]) }
       )
 
       if (actions.includes('show')) {
@@ -173,8 +172,7 @@ export default function generateActionsWithAuth(
   }
 
   const createAction = {
-    async [createActionName(resource, 'create')]({ commit, state }, { query: query, headers: headers }) {
-      const obj = changeCaseObject.snakeCase(state[initializingName])
+    async [createActionName(resource, 'create')]({ commit, state }, { query: query, headers: headers, record: record }) {
       const { data } = await requestCallback(
         'create',
         camelTo_snake(resource),
@@ -183,7 +181,7 @@ export default function generateActionsWithAuth(
         {
           isSingular: isSingular
         },
-        { [camelTo_snake(resource)]: obj }
+        { [camelTo_snake(resource)]: changeCaseObject.snakeCase(record || state[initializingName]) }
       )
 
       if (actions.includes('show')) {
