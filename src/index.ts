@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import generateInitialState from './store/state'
 import generateMutations from './store/mutation'
 import generateActionsWithAuth from './store/action'
@@ -5,6 +6,15 @@ import defaultRequestCallback from './default/requestCallback'
 import generateComputed from './component/computed'
 import generateMethods from './component/methods'
 import generateFetch from './component/fetch'
+
+export type IndexMethod = (app: Vue, force?: boolean) => Promise<void>
+export type ShowMethod = (app: Vue, id: number, force?: boolean) => Promise<void>
+export type ShowMethodForSingular = (app: Vue, force?: boolean) => Promise<void>
+export type NewMethod = (app: Vue) => Promise<void>
+export type CreateMethod = (app: Vue) => Promise<any>
+export type EditMethod = (app: Vue, id: number, force?: boolean) => Promise<void>
+export type UpdateMethod = (app: Vue, id: number) => Promise<any>
+export type DestroyMethod = (app: Vue, id: number) => Promise<void>
 
 export type Action = 'index' | 'show' | 'new' | 'create' | 'edit' | 'update' | 'destroy'
 

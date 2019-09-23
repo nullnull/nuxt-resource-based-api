@@ -33,7 +33,7 @@ interface Callback {
   errorHandler: (e: Error, context: Context) => object
 }
 
-export default function generateFetch(resources: Resource[], { createHeaders, errorHandler }: Callback) {
+export default function generateFetch(resources: Resource[], { createHeaders, errorHandler }: Callback): (ctx: Context) => void {
   return async (context: Context) => {
     for (var i = 0; i < resources.length; i++) {
       const r = resources[i]

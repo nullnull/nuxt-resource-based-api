@@ -1,17 +1,8 @@
-import { Resource } from "../index"
+import { Resource, IndexMethod, ShowMethod, ShowMethodForSingular, NewMethod, CreateMethod, EditMethod, UpdateMethod, DestroyMethod } from "../index"
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { snake_toCamel } from "../util"
 import pluralize from 'pluralize'
-
-export type IndexMethod = (app: Vue, force?: boolean) => Promise<void>
-export type ShowMethod = (app: Vue, id: number, force?: boolean) => Promise<void>
-export type ShowMethodForSingular = (app: Vue, force?: boolean) => Promise<void>
-export type NewMethod = (app: Vue) => Promise<void>
-export type CreateMethod = (app: Vue) => Promise<any>
-export type EditMethod = (app: Vue, id: number, force?: boolean) => Promise<void>
-export type UpdateMethod = (app: Vue, id: number) => Promise<any>
-export type DestroyMethod = (app: Vue, id: number) => Promise<void>
 
 interface Generator {
   index: (resource: string, callbacks: any) => { [x: string]: IndexMethod }
