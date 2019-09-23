@@ -14,6 +14,8 @@ const generateComputed = (resources: Resource[]) => {
         name = editingResourceName(r.resource)
       } else if (r.action === 'new') {
         name = initializingResourceName(r.resource)
+      } else {
+        return
       }
       // Use eval to avoid binding `this` to this closure
       const src = `({
