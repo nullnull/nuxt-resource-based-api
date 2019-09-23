@@ -6,7 +6,7 @@ test('works fine', () => {
   })
   const { state, mutations, actions } = Vapi.createStore(
     'article',
-    ['index']
+    ['index', 'show', 'new', 'edit', 'destroy']
   )
   console.log(state);
   console.log(mutations);

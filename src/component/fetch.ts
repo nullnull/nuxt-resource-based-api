@@ -1,10 +1,10 @@
 import { Resource, FetchCallback, Fetch } from "../index";
-
+import { createActionName } from '../util'
 type Context = any // TODO
 
 async function fetchResource(
   resource: string,
-  method: string,
+  action: string,
   context: Context,
   createHeaders?: Function,
   errorHandler?: Function,
@@ -14,13 +14,13 @@ async function fetchResource(
   const headers = createHeaders ? createHeaders(context) : {}
 
   try {
-    if (['show', 'edit'].includes(method) && id !== undefined) {
-      await store.dispatch(`${resource}/${method}`, {
+    if (['show', 'edit'].includes(action) && id !== undefined) {
+      await store.dispatch(createActionName(resource, action), {
         headers,
         id
       })
-    } else if (['index', 'new', 'show', 'edit'].includes(method)) {
-      await store.dispatch(`${resource}/${method}`, {
+    } else if (['index', 'new', 'show', 'edit'].includes(action)) {
+      await store.dispatch(createActionName(resource, action), {
         headers,
       })
     }
