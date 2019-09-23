@@ -136,6 +136,9 @@ export default function generateActionsWithAuth(
         commit(snake_toCamel(`set_editing_${resource}`), cloneDeep(data))
       }
     },
+  }
+
+  const updateAction = {
     async [createActionName(resource, 'update')]({ commit, state }, { query: query, headers: headers }) {
       const obj = changeCaseObject.snakeCase(state[editingName])
       const { data } = await requestCallback(
@@ -167,6 +170,9 @@ export default function generateActionsWithAuth(
       const newObj = {}
       commit(snake_toCamel(`set_initializing_${resource}`), newObj)
     },
+  }
+
+  const createAction = {
     async [createActionName(resource, 'create')]({ commit, state }, { query: query, headers: headers }) {
       const obj = changeCaseObject.snakeCase(state[initializingName])
       const { data } = await requestCallback(
@@ -209,10 +215,12 @@ export default function generateActionsWithAuth(
 
   return {
     ...(actions.includes('index') ? indexAction : {}),
-    ...(actions.includes('edit') ? editAction : {}),
-    ...(actions.includes('new') ? newAction : {}),
-    ...(actions.includes('destroy') ? destroyAction : {}),
     ...(actions.includes('show') ? showAction : {}),
+    ...(actions.includes('new') ? newAction : {}),
+    ...(actions.includes('new') || actions.includes('create') ? createAction : {}),
+    ...(actions.includes('edit') ? editAction : {}),
+    ...(actions.includes('edit') || actions.includes('update') ? updateAction : {}),
+    ...(actions.includes('destroy') ? destroyAction : {}),
     ...extention
   }
 }
