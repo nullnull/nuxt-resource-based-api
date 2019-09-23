@@ -44,7 +44,6 @@ const generator: Generator = {
     return { [actionName]: method }
   },
   new(resource: string, { createHeaders, errorHandler }) {
-    // new
     const actionName: string = createActionName(resource, 'new')
     const method = async function (force = false) {
       try {
@@ -91,11 +90,10 @@ const generator: Generator = {
   },
   update(resource: string, { createHeaders, errorHandler }) {
     const actionName: string = createActionName(resource, 'update')
-    const method = async function (id: number, record = undefined) {
+    const method = async function (record = undefined) {
       try {
         return await this.$store.dispatch(`${resource}/${actionName}`, {
           headers: createHeaders(this),
-          id: id,
           record
         })
       } catch (e) {

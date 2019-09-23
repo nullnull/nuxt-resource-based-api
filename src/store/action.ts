@@ -112,6 +112,39 @@ export default function generateActionsWithAuth(
     }
   }
 
+  const newAction = {
+    async [createActionName(resource, 'new')]({ commit, state }) {
+      if (state[initializingName] && !config.refreshPropertiesAlways) {
+        return
+      }
+      const newObj = {}
+      commit(snake_toCamel(`set_initializing_${resource}`), newObj)
+    },
+  }
+
+  const createAction = {
+    async [createActionName(resource, 'create')]({ commit, state }, { query: query, headers: headers, record: record }) {
+      const { data } = await requestCallback(
+        'create',
+        camelTo_snake(resource),
+        query,
+        headers,
+        {
+          isSingular: isSingular
+        },
+        { [camelTo_snake(resource)]: changeCaseObject.snakeCase(record || state[initializingName]) }
+      )
+
+      if (actions.includes('show')) {
+        commit(snake_toCamel(`set_${resource}`), data)
+      }
+      if (actions.includes('index')) {
+        commit(snake_toCamel(`refresh_record_in_${pluralize(resource)}`), data)
+      }
+      return changeCaseObject.camelCase(data)
+    }
+  }
+
   const editAction = {
     async [createActionName(resource, 'edit')]({ commit, dispatch, state }, { id: id, force: force, query: query, headers: headers }) {
       if (state[editingName] && state[editingName].id == id && !config.refreshPropertiesAlways) {
@@ -149,39 +182,6 @@ export default function generateActionsWithAuth(
           isSingular: isSingular
         },
         { [camelTo_snake(resource)]: changeCaseObject.snakeCase(record || state[editingName]) }
-      )
-
-      if (actions.includes('show')) {
-        commit(snake_toCamel(`set_${resource}`), data)
-      }
-      if (actions.includes('index')) {
-        commit(snake_toCamel(`refresh_record_in_${pluralize(resource)}`), data)
-      }
-      return changeCaseObject.camelCase(data)
-    }
-  }
-
-  const newAction = {
-    async [createActionName(resource, 'new')]({ commit, state }) {
-      if (state[initializingName] && !config.refreshPropertiesAlways) {
-        return
-      }
-      const newObj = {}
-      commit(snake_toCamel(`set_initializing_${resource}`), newObj)
-    },
-  }
-
-  const createAction = {
-    async [createActionName(resource, 'create')]({ commit, state }, { query: query, headers: headers, record: record }) {
-      const { data } = await requestCallback(
-        'create',
-        camelTo_snake(resource),
-        query,
-        headers,
-        {
-          isSingular: isSingular
-        },
-        { [camelTo_snake(resource)]: changeCaseObject.snakeCase(record || state[initializingName]) }
       )
 
       if (actions.includes('show')) {
