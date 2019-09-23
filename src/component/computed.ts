@@ -21,11 +21,9 @@ const generateComputed = (resources: Resource[]) => {
       } else {
         return
       }
-      // Use eval to avoid binding `this` to this closure
-      const src = `({
-        ${name}() { return this.$store.state.${r.resource}.${name} }
-      })`
-      return eval(src)
+      return {
+        [name]: function() { return this.$store.state[r.resource][name] }
+      }
     })
     .filter(x => x)
     .reduce((acc, x) => Object.assign(x, acc), {})
