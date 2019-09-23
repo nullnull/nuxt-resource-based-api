@@ -31,7 +31,7 @@ export default function(apiUrl) {
                 headers: headers
             })
         } else if (['edit'].includes(action)) {
-            const path = options.isSingular ? `${pluralize(resource)}/edit` : `${pluralize(resource)}/${query.id}/edit`
+            const path = options.isSingular ? `${resource}/edit` : `${pluralize(resource)}/${query.id}/edit`
             return await axios[method](`${apiUrl}/${path}`, {
                 headers: headers
             })
