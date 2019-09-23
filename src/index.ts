@@ -58,8 +58,20 @@ export interface Resource {
   options?: Options
 }
 
-import { Methods, MethodCallback } from './component/methods'
-import { Fetch, FetchCallback } from './component/fetch'
+// TODO
+type Context = any // TODO
+export interface Methods {
+  [x: string]: (app: Vue, id?: number) => Promise<any>
+}
+export interface MethodCallback {
+  createHeaders: (app: Vue) => object
+  errorHandler: (e: any, app: Vue) => void
+}
+export type Fetch = (ctx: Context) => void
+export interface FetchCallback {
+  createHeaders: (context: Context) => object
+  errorHandler: (e: any, context: Context) => void
+}
 
 const Vapi = {
   apiUrl: '',

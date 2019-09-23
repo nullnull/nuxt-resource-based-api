@@ -1,11 +1,6 @@
-import { Resource } from "../index";
+import { Resource, FetchCallback, Fetch } from "../index";
 
 type Context = any // TODO
-export type Fetch = (ctx: Context) => void
-export interface FetchCallback {
-  createHeaders: (context: Context) => object
-  errorHandler: (e: any, context: Context) => void
-}
 
 async function fetchResource(
   resource: string,
