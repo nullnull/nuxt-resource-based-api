@@ -2,17 +2,18 @@ import pluralize from 'pluralize'
 import changeCaseObject from 'change-case-object'
 import { editingResourceName, initializingResourceName } from '../util'
 import { Action, MutationExtension } from '../index'
+import { snake_toCamel } from '../../dist/util'
 
 export default function generateMutations(resource: string, actions: Action[], extension: MutationExtension = {}) {
   const indexMutation = {
-    setIndexResponse(state, data) {
+    [snake_toCamel(`set_${pluralize(resource)}`)](state, data) {
       state[pluralize(resource)] = changeCaseObject.camelCase(data)
       state.shouldRefreshIndexState = false
     },
-    invalidateIndexState(state) {
+    [snake_toCamel(`invalidate_${pluralize(resource)}`)](state) {
       state.shouldRefreshIndexState = true
     },
-    refreshRecordInIndexState(state, data) {
+    [snake_toCamel(`refresh_record_in_${pluralize(resource)}`)](state, data) {
       data = changeCaseObject.camelCase(data)
       const index = state[pluralize(resource)].map(x => x.id).indexOf(data.id)
       const resources = state[pluralize(resource)].filter(x => x.id != data.id)
@@ -26,30 +27,30 @@ export default function generateMutations(resource: string, actions: Action[], e
   }
 
   const showMutations = {
-    setShowResponse(state, data) {
+    [snake_toCamel(`set_${resource}`)](state, data) {
       state[resource] = changeCaseObject.camelCase(data)
     },
-    invalidateShowState(state) {
+    [snake_toCamel(`invalidate_${resource}`)](state) {
       state.shouldRefreshShowState = true
     }
   }
 
-  const editMutations = {
-    initializeEditingData(state, data) {
-      state[editingResourceName(resource)] = changeCaseObject.camelCase(data)
-    }
-  }
-
   const newMutations = {
-    initializeInitializingData(state, data) {
+    [snake_toCamel(`set_initializing_${resource}`)](state, data) {
       state[initializingResourceName(resource)] = changeCaseObject.camelCase(
         data
       )
     }
   }
 
+  const editMutations = {
+    [snake_toCamel(`set_editing_${resource}`)](state, data) {
+      state[editingResourceName(resource)] = changeCaseObject.camelCase(data)
+    }
+  }
+
   const destroyMutations = {
-    removeRcordInIndexState(state, id) {
+    [snake_toCamel(`remove_record_in_${pluralize(resource)}`)](state, id) {
       if (!state[pluralize(resource)]) {
         return
       }

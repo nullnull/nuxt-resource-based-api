@@ -51,10 +51,10 @@ export default function generateActionsWithAuth(
           isSingular: isSingular
         }
       )
-      commit('setIndexResponse', data)
+      commit(snake_toCamel(`set_${pluralize(resource)}`), data)
     },
     [snake_toCamel(`invalidate_${pluralize(resource)}`)]({ commit }) {
-      commit('invalidateIndexState')
+      commit(snake_toCamel(`invalidate_${pluralize(resource)}`))
     }
   }
 
@@ -72,10 +72,10 @@ export default function generateActionsWithAuth(
           isSingular: isSingular
         }
       )
-      commit('setShowResponse', data)
+      commit(snake_toCamel(`set_${resource}`), data)
     },
     [snake_toCamel(`invalidate_${resource}`)]({ commit }) {
-      commit('invalidateShowState')
+      commit(snake_toCamel(`invalidate_${resource}`))
     }
   }
 
@@ -89,7 +89,7 @@ export default function generateActionsWithAuth(
         if (data === undefined) {
           throw 404
         }
-        commit('setShowResponse', data)
+        commit(snake_toCamel(`set_${resource}`), data)
       } else {
         const hasResource = state[resource] && state[resource].id === id
         if (hasResource && !state.shouldRefreshShowState && !force) {
@@ -104,11 +104,11 @@ export default function generateActionsWithAuth(
             isSingular: isSingular
           }
         )
-        commit('setShowResponse', data)
+        commit(snake_toCamel(`set_${resource}`), data)
       }
     },
     [snake_toCamel(`invalidate_${resource}`)]({ commit }) {
-      commit('invalidateShowState')
+      commit(snake_toCamel(`invalidate_${resource}`))
     }
   }
 
@@ -122,7 +122,7 @@ export default function generateActionsWithAuth(
         if (!state[resource] || state[resource].id != id) {
           await dispatch(createActionName(resource, 'show'), { id: id, force: force, query: query, headers: headers })
         }
-        commit('initializeEditingData', cloneDeep(state[resource]))
+        commit(snake_toCamel(`set_editing_${resource}`), cloneDeep(state[resource]))
       } else {
         const { data } = await requestCallback(
           'edit',
@@ -133,7 +133,7 @@ export default function generateActionsWithAuth(
             isSingular: isSingular
           }
         )
-        commit('initializeEditingData', cloneDeep(data))
+        commit(snake_toCamel(`set_editing_${resource}`), cloneDeep(data))
       }
     },
     async [createActionName(resource, 'update')]({ commit, state }, { query: query, headers: headers }) {
@@ -150,10 +150,10 @@ export default function generateActionsWithAuth(
       )
 
       if (actions.includes('show')) {
-        commit('setShowResponse', data)
+        commit(snake_toCamel(`set_${resource}`), data)
       }
       if (actions.includes('index')) {
-        commit('refreshRecordInIndexState', data)
+        commit(snake_toCamel(`refresh_record_in_${pluralize(resource)}`), data)
       }
       return changeCaseObject.camelCase(data)
     }
@@ -165,7 +165,7 @@ export default function generateActionsWithAuth(
         return
       }
       const newObj = {}
-      commit('initializeInitializingData', newObj)
+      commit(snake_toCamel(`set_initializing_${resource}`), newObj)
     },
     async [createActionName(resource, 'create')]({ commit, state }, { query: query, headers: headers }) {
       const obj = changeCaseObject.snakeCase(state[initializingName])
@@ -181,10 +181,10 @@ export default function generateActionsWithAuth(
       )
 
       if (actions.includes('show')) {
-        commit('setShowResponse', data)
+        commit(snake_toCamel(`set_${resource}`), data)
       }
       if (actions.includes('index')) {
-        commit('refreshRecordInIndexState', data)
+        commit(snake_toCamel(`refresh_record_in_${pluralize(resource)}`), data)
       }
       return changeCaseObject.camelCase(data)
     }
@@ -201,7 +201,7 @@ export default function generateActionsWithAuth(
           isSingular: isSingular
         }
       )
-      commit('removeRcordInIndexState', id)
+      commit(snake_toCamel(`remove_record_in_${pluralize(resource)}`), id)
     }
   }
 
