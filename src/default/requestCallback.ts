@@ -10,27 +10,15 @@ const actionToMethod = {
     destroy: 'delete',
 }
 
-function camelTo_snake(str) {
-    return str.replace(/[A-Z]/g, match => '_' + match.toLowerCase())
-}
-
-const objectMap = function (obj: object, f: (any) => any) {
-    return Object.entries(obj).map(([k, v]) => f([k, v]))
-}
-
-function generatePathWithQuery(resources: string, query: object | undefined) {
-    if (query === undefined) {
-        return camelTo_snake(resources)
-    } else {
-        return camelTo_snake(resources) + '?' + objectMap(query, ([k, v]) => `${k}=${v}`).join("&") // TODO
-    }
+const getQueryStrings = (query: object): string => {
+    return query ? '?' + Object.entries(query).map(([k, v]) => `${k}=${v}`).join('&') : ''
 }
 
 export default function(apiUrl) {
     return async function (action, resource, query, headers, options, obj = {}) {
         const method = actionToMethod[action]
         if (action === 'index') {
-            return await axios[method](`${apiUrl}/${generatePathWithQuery(pluralize(resource), query)}`, {
+            return await axios[method](`${apiUrl}/${pluralize(resource)}${getQueryStrings(query)}`, {
                 headers: headers
             })
         } else if (['create'].includes(action)) {
@@ -48,7 +36,7 @@ export default function(apiUrl) {
                 headers: headers
             })
         } else if (['update'].includes(action)) {
-            const path = options.isSingular ? `${pluralize(resource)}` : `${pluralize(resource)}/${query.id}`
+            const path = options.isSingular ? resource : `${pluralize(resource)}/${query.id}`
             return await axios[method](`${apiUrl}/${path}`, obj, {
                 headers: headers
             })
