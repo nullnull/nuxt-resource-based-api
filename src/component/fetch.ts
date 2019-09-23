@@ -1,6 +1,11 @@
-import { Resource, FetchCallback } from "../index";
+import { Resource } from "../index";
 
 type Context = any // TODO
+export type Fetch = (ctx: Context) => void
+export interface FetchCallback {
+  createHeaders: (context: Context) => object
+  errorHandler: (e: any, context: Context) => void
+}
 
 async function fetchResource(
   resource: string,
@@ -29,7 +34,7 @@ async function fetchResource(
   }
 }
 
-export default function generateFetch(resources: Resource[], { createHeaders, errorHandler }: FetchCallback): (ctx: Context) => void {
+const generateFetch = (resources: Resource[], { createHeaders, errorHandler }: FetchCallback): Fetch => {
   return async (context: Context) => {
     for (var i = 0; i < resources.length; i++) {
       const r = resources[i]
@@ -37,3 +42,5 @@ export default function generateFetch(resources: Resource[], { createHeaders, er
     }
   }
 }
+
+export default generateFetch

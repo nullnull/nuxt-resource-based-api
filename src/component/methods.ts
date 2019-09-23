@@ -1,9 +1,16 @@
 import { Resource, IndexMethod, ShowMethod, ShowMethodForSingular, NewMethod, CreateMethod, EditMethod, UpdateMethod, DestroyMethod } from "../index"
-import { Methods, MethodCallback } from "../index"
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { snake_toCamel } from "../util"
 import pluralize from 'pluralize'
+
+export interface Methods {
+  [x: string]: (app: Vue, id?: number) => Promise<any>
+}
+export interface MethodCallback {
+  createHeaders: (app: Vue) => object
+  errorHandler: (e: any, app: Vue) => void
+}
 
 interface Generator {
   index: (resource: string, callbacks: any) => { [x: string]: IndexMethod }
@@ -16,29 +23,29 @@ interface Generator {
 const generator: Generator = {
   index(resource: string, { createHeaders, errorHandler }) {
     const methodName: string = snake_toCamel(`fetch_${pluralize(resource)}`)
-    const method = async (app: Vue, force = false) => {
+    const method = async function (force = false) {
       try {
-        await app.$store.dispatch(`${resource}/index`, {
-          headers: createHeaders(app),
+        await this.$store.dispatch(`${resource}/index`, {
+          headers: createHeaders(this),
           force: force
         })
       } catch(e) {
-        errorHandler(e, app)
+        errorHandler(e, this)
       }
     }
     return { [methodName]: method }
   },
   show(resource: string, { createHeaders, errorHandler }) {
     const methodName: string = snake_toCamel(`fetch_${resource}`)
-    const method = async (app: Vue, id: number, force = false) => {
+    const method = async function (id: number, force = false) {
       try {
-        await app.$store.dispatch(`${resource}/show`, {
-          headers: createHeaders(app),
+        await this.$store.dispatch(`${resource}/show`, {
+          headers: createHeaders(this),
           id: id,
           force: force
         })
       } catch (e) {
-        errorHandler(e, app)
+        errorHandler(e, this)
       }
     }
     return { [methodName]: method }
@@ -46,25 +53,25 @@ const generator: Generator = {
   new(resource: string, { createHeaders, errorHandler }) {
     // new
     const methodNameNew: string = snake_toCamel(`fetch_initializing_${resource}`)
-    const methodNew = async (app: Vue, force = false) => {
+    const methodNew = async function (force = false) {
       try {
-        await app.$store.dispatch(`${resource}/new`, {
-          headers: createHeaders(app),
+        await this.$store.dispatch(`${resource}/new`, {
+          headers: createHeaders(this),
           force: force
         })
       } catch (e) {
-        errorHandler(e, app)
+        errorHandler(e, this)
       }
     }
     // create
     const methodNameCreate: string = snake_toCamel(`create_${resource}`)
-    const methodCreate = async (app: Vue, force = false) => {
+    const methodCreate = async function (force = false) {
       try {
-        return await app.$store.dispatch(`${resource}/create`, {
-          headers: createHeaders(app),
+        return await this.$store.dispatch(`${resource}/create`, {
+          headers: createHeaders(this),
         })
       } catch (e) {
-        errorHandler(e, app)
+        errorHandler(e, this)
       }
     }
 
@@ -76,27 +83,27 @@ const generator: Generator = {
   edit(resource: string, { createHeaders, errorHandler }) {
     // edit
     const methodNameEdit: string = snake_toCamel(`fetch_editing_${resource}`)
-    const methodEdit = async (app: Vue, id: number, force = false) => {
+    const methodEdit = async function (id: number, force = false) {
       try {
-        await app.$store.dispatch(`${resource}/edit`, {
-          headers: createHeaders(app),
+        await this.$store.dispatch(`${resource}/edit`, {
+          headers: createHeaders(this),
           id: id,
           force: force
         })
       } catch (e) {
-        errorHandler(e, app)
+        errorHandler(e, this)
       }
     }
     // update
     const methodNameUpdate: string = snake_toCamel(`update_${resource}`)
-    const methodUpdate = async (app: Vue, id: number, force = false) => {
+    const methodUpdate = async function (id: number, force = false) {
       try {
-        return await app.$store.dispatch(`${resource}/update`, {
-          headers: createHeaders(app),
+        return await this.$store.dispatch(`${resource}/update`, {
+          headers: createHeaders(this),
           id: id,
         })
       } catch (e) {
-        errorHandler(e, app)
+        errorHandler(e, this)
       }
     }
     return {
@@ -106,21 +113,21 @@ const generator: Generator = {
   },
   destroy(resource: string, { createHeaders, errorHandler }) {
     const methodName: string = snake_toCamel(`destroy_${resource}`)
-    const method = async (app: Vue, id: number) => {
+    const method = async function (id: number) {
       try {
-        await app.$store.dispatch(`${resource}/destroy`, {
-          headers: createHeaders(app),
+        await this.$store.dispatch(`${resource}/destroy`, {
+          headers: createHeaders(this),
           id: id,
         })
       } catch (e) {
-        errorHandler(e, app)
+        errorHandler(e, this)
       }
     }
     return { [methodName]: method }
   },
 }
 
-export default function generateMethods(resources: Resource[], { createHeaders, errorHandler }: MethodCallback): Methods {
+const generateMethods = (resources: Resource[], { createHeaders, errorHandler }: MethodCallback): Methods => {
   return resources.map(resource => {
     if (!generator[resource.action]) {
       return null
@@ -128,3 +135,4 @@ export default function generateMethods(resources: Resource[], { createHeaders, 
     return generator[resource.action](resource.resource, { createHeaders, errorHandler })
   }).filter(x => x).reduce((acc, x) => Object.assign(x, acc), {})
 }
+export default generateMethods

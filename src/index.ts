@@ -7,34 +7,14 @@ import generateComputed from './component/computed'
 import generateMethods from './component/methods'
 import generateFetch from './component/fetch'
 
-// TODO
-type Context = any
-export interface FetchCallback {
-  createHeaders: (context: Context) => object
-  errorHandler: (e: any, context: Context) => void
-}
-export interface MethodCallback {
-  createHeaders: (app: Vue) => object
-  errorHandler: (e: any, app: Vue) => void
-}
-
-export type Fetch = (ctx: Context) => void
-export interface Methods {
-  [x: string]: (app: Vue, id?: number) => Promise<any>
-}
-export interface Computeds {
-  [x: string]: () => any
-}
-
-
-export type IndexMethod = (app: Vue, force?: boolean) => Promise<void>
-export type ShowMethod = (app: Vue, id: number, force?: boolean) => Promise<void>
-export type ShowMethodForSingular = (app: Vue, force?: boolean) => Promise<void>
-export type NewMethod = (app: Vue) => Promise<void>
-export type CreateMethod = (app: Vue) => Promise<any>
-export type EditMethod = (app: Vue, id: number, force?: boolean) => Promise<void>
-export type UpdateMethod = (app: Vue, id: number) => Promise<any>
-export type DestroyMethod = (app: Vue, id: number) => Promise<void>
+export type IndexMethod = (force?: boolean) => Promise<void>
+export type ShowMethod = (id: number, force?: boolean) => Promise<void>
+export type ShowMethodForSingular = (force?: boolean) => Promise<void>
+export type NewMethod = () => Promise<void>
+export type CreateMethod = () => Promise<any>
+export type EditMethod = (id: number, force?: boolean) => Promise<void>
+export type UpdateMethod = (id: number) => Promise<any>
+export type DestroyMethod = (id: number) => Promise<void>
 
 export type Action = 'index' | 'show' | 'new' | 'create' | 'edit' | 'update' | 'destroy'
 
@@ -78,6 +58,9 @@ export interface Resource {
   options?: Options
 }
 
+import { Methods, MethodCallback } from './component/methods'
+import { Fetch, FetchCallback } from './component/fetch'
+
 const Vapi = {
   apiUrl: '',
   requestCallback(_action, _resource, _query, _headers, _options, _obj = {}): Promise<any> { throw 'requestCallback or apiUrl must be defined' },
@@ -109,9 +92,9 @@ const Vapi = {
       )
     }
   },
-  generateComputed: generateComputed as (r: Resource[]) => Computeds,
-  generateMethods: generateMethods as (r: Resource[], { createHeaders, errorHandler }: MethodCallback) => Methods,
-  generateFetch: generateFetch as (r: Resource[], { createHeaders, errorHandler }: FetchCallback) => Fetch,
+  generateComputed,
+  generateMethods,
+  generateFetch
 }
 
 export default Vapi

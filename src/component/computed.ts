@@ -2,6 +2,10 @@ import pluralize from 'pluralize'
 import { editingResourceName, initializingResourceName } from '../util'
 import { Resource } from '../index';
 
+export interface Computeds {
+  [x: string]: () => any
+}
+
 const generateComputed = (resources: Resource[]) => {
   return resources
     .map(r => {
