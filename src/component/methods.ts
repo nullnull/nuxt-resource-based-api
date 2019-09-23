@@ -61,10 +61,11 @@ const generator: Generator = {
   },
   create(resource: string, { createHeaders, errorHandler }) {
     const actionName: string = createActionName(resource, 'create')
-    const method = async function (force = false) {
+    const method = async function (record = undefined) {
       try {
         return await this.$store.dispatch(`${resource}/${actionName}`, {
           headers: createHeaders(this),
+          record
         })
       } catch (e) {
         errorHandler(e, this)
@@ -90,11 +91,12 @@ const generator: Generator = {
   },
   update(resource: string, { createHeaders, errorHandler }) {
     const actionName: string = createActionName(resource, 'update')
-    const method = async function (id: number, force = false) {
+    const method = async function (id: number, record = undefined) {
       try {
         return await this.$store.dispatch(`${resource}/${actionName}`, {
           headers: createHeaders(this),
           id: id,
+          record
         })
       } catch (e) {
         errorHandler(e, this)
