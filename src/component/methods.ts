@@ -1,4 +1,5 @@
 import { Resource, IndexMethod, ShowMethod, ShowMethodForSingular, NewMethod, CreateMethod, EditMethod, UpdateMethod, DestroyMethod } from "../index"
+import { Methods, MethodCallback } from "../index"
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { snake_toCamel } from "../util"
@@ -119,12 +120,7 @@ const generator: Generator = {
   },
 }
 
-interface Callback {
-  createHeaders: (app: Vue) => object
-  errorHandler: (e: Error, app: Vue) => object
-}
-
-export default function generateMethods(resources: Resource[], { createHeaders, errorHandler }: Callback) {
+export default function generateMethods(resources: Resource[], { createHeaders, errorHandler }: MethodCallback): Methods {
   return resources.map(resource => {
     if (!generator[resource.action]) {
       return null

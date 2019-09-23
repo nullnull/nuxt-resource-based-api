@@ -1,5 +1,6 @@
-import { Context } from "vm";
-import { Resource } from "../index";
+import { Resource, FetchCallback } from "../index";
+
+type Context = any // TODO
 
 async function fetchResource(
   resource: string,
@@ -8,7 +9,7 @@ async function fetchResource(
   createHeaders?: Function,
   errorHandler?: Function,
 ) {
-  const { store, router, query } = context
+  const { store, query } = context
   const id = query.id // TODO
   const headers = createHeaders ? createHeaders(context) : {}
 
@@ -28,12 +29,7 @@ async function fetchResource(
   }
 }
 
-interface Callback {
-  createHeaders: (context: Context) => object
-  errorHandler: (e: Error, context: Context) => object
-}
-
-export default function generateFetch(resources: Resource[], { createHeaders, errorHandler }: Callback): (ctx: Context) => void {
+export default function generateFetch(resources: Resource[], { createHeaders, errorHandler }: FetchCallback): (ctx: Context) => void {
   return async (context: Context) => {
     for (var i = 0; i < resources.length; i++) {
       const r = resources[i]

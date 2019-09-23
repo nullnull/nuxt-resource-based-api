@@ -7,6 +7,26 @@ import generateComputed from './component/computed'
 import generateMethods from './component/methods'
 import generateFetch from './component/fetch'
 
+// TODO
+type Context = any
+export interface FetchCallback {
+  createHeaders: (context: Context) => object
+  errorHandler: (e: any, context: Context) => void
+}
+export interface MethodCallback {
+  createHeaders: (app: Vue) => object
+  errorHandler: (e: any, app: Vue) => void
+}
+
+export type Fetch = (ctx: Context) => void
+export interface Methods {
+  [x: string]: (app: Vue, id?: number) => Promise<any>
+}
+export interface Computeds {
+  [x: string]: () => any
+}
+
+
 export type IndexMethod = (app: Vue, force?: boolean) => Promise<void>
 export type ShowMethod = (app: Vue, id: number, force?: boolean) => Promise<void>
 export type ShowMethodForSingular = (app: Vue, force?: boolean) => Promise<void>
@@ -59,11 +79,8 @@ export interface Resource {
 }
 
 const Vapi = {
-  generateComputed,
-  generateMethods,
-  generateFetch,
-  requestCallback(action, resource, query, headers, options, obj = {}): Promise<any> { throw 'requestCallback or apiUrl must be defined' },
   apiUrl: '',
+  requestCallback(_action, _resource, _query, _headers, _options, _obj = {}): Promise<any> { throw 'requestCallback or apiUrl must be defined' },
   setConfig(config) {
     if (config.requestCallback) {
       this.requestCallback = config.requestCallback
@@ -91,7 +108,10 @@ const Vapi = {
         options.actionConfig || {}
       )
     }
-  }
+  },
+  generateComputed: generateComputed as (r: Resource[]) => Computeds,
+  generateMethods: generateMethods as (r: Resource[], { createHeaders, errorHandler }: MethodCallback) => Methods,
+  generateFetch: generateFetch as (r: Resource[], { createHeaders, errorHandler }: FetchCallback) => Fetch,
 }
 
 export default Vapi

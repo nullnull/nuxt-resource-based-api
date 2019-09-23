@@ -1,12 +1,12 @@
 {
   "name": "vuex-resource-based-api",
-  "version": "0.1.24",
+  "version": "0.1.30",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "tsc": "tsc",
-    "build": "webpack && cp -f src/index.d.ts dist/",
+    "build": "webpack && cp -fr types/src/* dist/",
     "prepare": "npm run build",
     "test": "jest"
   },
