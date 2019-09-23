@@ -1,8 +1,7 @@
 import pluralize from 'pluralize'
 import changeCaseObject from 'change-case-object'
-import { editingResourceName, initializingResourceName } from '../util'
+import { snake_toCamel, editingResourceName, initializingResourceName } from '../util'
 import { Action, MutationExtension } from '../index'
-import { snake_toCamel } from '../../dist/util'
 
 export default function generateMutations(resource: string, actions: Action[], extension: MutationExtension = {}) {
   const indexMutation = {
