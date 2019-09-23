@@ -16,7 +16,7 @@ const generator: Generator = {
     const actionName: string = createActionName(resource, 'index')
     const method = async function (force = false) {
       try {
-        await this.$store.dispatch(actionName, {
+        await this.$store.dispatch(`${resource}/${actionName}`, {
           headers: createHeaders(this),
           force: force
         })
@@ -30,7 +30,7 @@ const generator: Generator = {
     const actionName: string = createActionName(resource, 'show')
     const method = async function (id: number, force = false) {
       try {
-        await this.$store.dispatch(actionName, {
+        await this.$store.dispatch(`${resource}/${actionName}`, {
           headers: createHeaders(this),
           id: id,
           force: force
@@ -46,7 +46,7 @@ const generator: Generator = {
     const actionNameNew: string = createActionName(resource, 'new')
     const methodNew = async function (force = false) {
       try {
-        await this.$store.dispatch(actionNameNew, {
+        await this.$store.dispatch(`${resource}/${actionNameNew}`, {
           headers: createHeaders(this),
           force: force
         })
@@ -58,7 +58,7 @@ const generator: Generator = {
     const actionNameCreate: string = createActionName(resource, 'create')
     const methodCreate = async function (force = false) {
       try {
-        return await this.$store.dispatch(actionNameCreate, {
+        return await this.$store.dispatch(`${resource}/${actionNameCreate}`, {
           headers: createHeaders(this),
         })
       } catch (e) {
@@ -76,7 +76,7 @@ const generator: Generator = {
     const actionNameEdit: string = createActionName(resource, 'edit')
     const methodEdit = async function (id: number, force = false) {
       try {
-        await this.$store.dispatch(actionNameEdit, {
+        await this.$store.dispatch(`${resource}/${actionNameEdit}`, {
           headers: createHeaders(this),
           id: id,
           force: force
@@ -89,7 +89,7 @@ const generator: Generator = {
     const actionNameUpdate: string = createActionName(resource, 'update')
     const methodUpdate = async function (id: number, force = false) {
       try {
-        return await this.$store.dispatch(actionNameUpdate, {
+        return await this.$store.dispatch(`${resource}/${actionNameUpdate}`, {
           headers: createHeaders(this),
           id: id,
         })
@@ -106,7 +106,7 @@ const generator: Generator = {
     const actionName: string = createActionName(resource, 'destroy')
     const method = async function (id: number) {
       try {
-        await this.$store.dispatch(actionName, {
+        await this.$store.dispatch(`${resource}/${actionName}`, {
           headers: createHeaders(this),
           id: id,
         })
