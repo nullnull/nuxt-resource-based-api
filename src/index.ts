@@ -19,7 +19,7 @@ export type DestroyMethod = (id: number) => Promise<void>
 export type Action = 'index' | 'show' | 'new' | 'create' | 'edit' | 'update' | 'destroy'
 
 export interface ActionExtension {
-  [k: string]: (ctx: any, payload: any) => void | Promise<void> // TODO: Define types for ctx, payload
+  [k: string]: (ctx: Context, payload: any) => void | Promise<void>
 }
 
 export interface MutationExtension {
@@ -27,7 +27,7 @@ export interface MutationExtension {
 }
 
 export interface StateExtension {
-  [k: string]: any // TODO: Define types for ctx, payload
+  [k: string]: any
 }
 
 export interface State {

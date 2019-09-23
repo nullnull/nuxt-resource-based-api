@@ -9,8 +9,8 @@ async function fetchResource(
   createHeaders?: Function,
   errorHandler?: Function,
 ) {
-  const { store, query } = context
-  const id = query.id // TODO
+  const { store, route, query } = context
+  const id = route.params.id || query.id
   const headers = createHeaders ? createHeaders(context) : {}
 
   try {
