@@ -176,7 +176,7 @@ export default function generateActionsWithAuth(
       const { data } = await requestCallback(
         'update',
         camelTo_snake(resource),
-        isSingular ? query : { ...query, id: state[editingName].id },
+        isSingular ? query : { ...query, id: (record || state[editingName]).id },
         headers,
         {
           isSingular: isSingular

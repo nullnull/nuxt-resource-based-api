@@ -11,9 +11,9 @@ export type IndexMethod = (force?: boolean) => Promise<void>
 export type ShowMethod = (id: number, force?: boolean) => Promise<void>
 export type ShowMethodForSingular = (force?: boolean) => Promise<void>
 export type NewMethod = () => Promise<void>
-export type CreateMethod = () => Promise<any>
+export type CreateMethod = (record?: object) => Promise<any>
 export type EditMethod = (id: number, force?: boolean) => Promise<void>
-export type UpdateMethod = (id: number) => Promise<any>
+export type UpdateMethod = (record?: object) => Promise<any>
 export type DestroyMethod = (id: number) => Promise<void>
 
 export type Action = 'index' | 'show' | 'new' | 'create' | 'edit' | 'update' | 'destroy'
