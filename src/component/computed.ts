@@ -2,6 +2,10 @@ import pluralize from 'pluralize'
 import { editingResourceName, initializingResourceName } from '../util'
 import { Resource } from '../index';
 
+export interface Computeds {
+  [x: string]: () => any
+}
+
 const generateComputed = (resources: Resource[]) => {
   return resources
     .map(r => {
@@ -14,12 +18,12 @@ const generateComputed = (resources: Resource[]) => {
         name = editingResourceName(r.resource)
       } else if (r.action === 'new') {
         name = initializingResourceName(r.resource)
+      } else {
+        return
       }
-      // Use eval to avoid binding `this` to this closure
-      const src = `({
-        ${name}() { return this.$store.state.${r.resource}.${name} }
-      })`
-      return eval(src)
+      return {
+        [name]: function() { return this.$store.state[r.resource][name] }
+      }
     })
     .filter(x => x)
     .reduce((acc, x) => Object.assign(x, acc), {})
