@@ -60,18 +60,6 @@ export interface Resource {
 
 // TODO
 type Context = any // TODO
-export interface Methods {
-  [x: string]: IndexMethod | ShowMethod | ShowMethodForSingular | NewMethod | CreateMethod | EditMethod | UpdateMethod | DestroyMethod
-}
-export interface MethodCallback {
-  createHeaders: (app: Vue) => object
-  errorHandler: (e: any, app: Vue) => void
-}
-export type Fetch = (ctx: Context) => void
-export interface FetchCallback {
-  createHeaders: (context: Context) => object
-  errorHandler: (e: any, context: Context) => void
-}
 
 const Vapi = {
   apiUrl: '',

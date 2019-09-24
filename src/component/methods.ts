@@ -1,6 +1,6 @@
-import { Resource, IndexMethod, ShowMethod, ShowMethodForSingular, NewMethod, CreateMethod, EditMethod, UpdateMethod, DestroyMethod } from "../index"
-import { Methods, MethodCallback } from "../index"
+import Vue from 'vue'
 import Vuex from 'vuex'
+import { Resource, IndexMethod, ShowMethod, ShowMethodForSingular, NewMethod, CreateMethod, EditMethod, UpdateMethod, DestroyMethod } from "../index"
 import { createActionName } from "../util"
 
 interface Generator {
@@ -118,7 +118,13 @@ const generator: Generator = {
   },
 }
 
-const generateMethods = (resources: Resource[], { createHeaders, errorHandler }: MethodCallback): Methods => {
+const generateMethods = (
+  resources: Resource[],
+  {
+    createHeaders = (app: Vue) => { return {} as object },
+    errorHandler = (e: any, app: Vue) => { }
+  } = {}
+): { [x: string]: IndexMethod | ShowMethod | ShowMethodForSingular | NewMethod | CreateMethod | EditMethod | UpdateMethod | DestroyMethod } => {
   return resources.map(resource => {
     if (!generator[resource.action]) {
       return null

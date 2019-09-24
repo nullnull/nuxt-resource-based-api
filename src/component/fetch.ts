@@ -1,4 +1,4 @@
-import { Resource, FetchCallback, Fetch } from "../index";
+import { Resource } from "../index";
 import { createActionName } from '../util'
 type Context = any // TODO
 
@@ -29,7 +29,13 @@ async function fetchResource(
   }
 }
 
-const generateFetch = (resources: Resource[], { createHeaders, errorHandler }: FetchCallback): Fetch => {
+const generateFetch = (
+  resources: Resource[],
+  {
+    createHeaders = (ctx: Context) => { return {} as object },
+    errorHandler = (e: any, ctx: Context) => {}
+  } = {}
+): (ctx: Context) => void => {
   return async (context: Context) => {
     for (var i = 0; i < resources.length; i++) {
       const r = resources[i]
