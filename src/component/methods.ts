@@ -122,7 +122,7 @@ const generateMethods = (
   resources: Resource[],
   {
     createHeaders = (app: Vue) => { return {} as object },
-    errorHandler = (e: any, app: Vue) => { }
+    errorHandler = (e: any, app: Vue) => { throw e }
   } = {}
 ): { [x: string]: IndexMethod | ShowMethod | ShowMethodForSingular | NewMethod | CreateMethod | EditMethod | UpdateMethod | DestroyMethod } => {
   return resources.map(resource => {

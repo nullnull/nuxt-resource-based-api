@@ -33,7 +33,7 @@ const generateFetch = (
   resources: Resource[],
   {
     createHeaders = (ctx: Context) => { return {} as object },
-    errorHandler = (e: any, ctx: Context) => {}
+    errorHandler = (e: any, ctx: Context) => { throw e }
   } = {}
 ): (ctx: Context) => void => {
   return async (context: Context) => {
