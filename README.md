@@ -16,7 +16,7 @@ With this library, you can implement state/mutations/actions by following simple
 import Vapi from 'nuxt-resource-based-api'
 
 Vapi.setConfig({
-    apiUrl: 'https://api.awesome-task-manager.com'
+  apiUrl: 'https://api.awesome-task-manager.com'
 })
 ```
 
@@ -108,6 +108,39 @@ export default Vue.extend({
 })
 ```
 
+If you want to implement a page to create task, write following code.
+
+**pages/tasks/new.vue**
+
+```html
+<script>
+import createComponent from '@/lib/create_component'
+
+export default createComponent([
+  { resource: 'task', action: 'create' },
+]).extend({
+  data() {
+    return {
+      title: '',
+      body: '',
+    }
+  },
+  methods: {
+    async create() {
+      await this.createTask({
+        title: this.title,
+        body: this.body
+      })
+    }
+  }
+})
+</script>
+
+<template>
+<!-- ... -->
+</template>
+```
+
 [See other examples in Wiki](https://github.com/nullnull/nuxt-resource-based-api/wiki/Examples).
 
 
@@ -142,3 +175,8 @@ export default function createComponent(resources) {
 ```
 
 You can also customize request handler, error handler and so on. [Please see Wiki](https://github.com/nullnull/nuxt-resource-based-api/wiki/Configuration)
+
+# Typescript Support
+Unfortunately Typescript is incompatible to dynamic generating codes like this library.
+But you can use typescript with some trick and we recommend to use typescript. See [Wiki](https://github.com/nullnull/nuxt-resource-based-api/wiki/Typescript-support) for details.
+
