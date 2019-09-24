@@ -1,7 +1,7 @@
 {
   "name": "nuxt-resource-based-api",
   "version": "0.3.0",
-  "description": "",
+  "description": "Provide extremely efficient way to handle API on Nuxt.js.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -15,6 +15,8 @@
     "url": "git+https://github.com/nullnull/nuxt-resource-based-api.git"
   },
   "keywords": [
+    "nuxt",
+    "vue",
     "vuex"
   ],
   "author": "nullnull",
