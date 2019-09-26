@@ -1,10 +1,10 @@
-import Vapi from './../src/index'
+import Napi from './../src/index'
 
 test('works fine', () => {
-  Vapi.setConfig({
+  Napi.setConfig({
     apiUrl: 'http://localhost:5000/'
   })
-  const { state, mutations, actions } = Vapi.createStore(
+  const { state, mutations, actions } = Napi.createStore(
     'article',
     ['index', 'show', 'new', 'edit', 'destroy']
   )

@@ -13,9 +13,9 @@ With this library, you can implement state/mutations/actions by following simple
 
 **store/index.js**
 ```js
-import Vapi from 'nuxt-resource-based-api'
+import Napi from 'nuxt-resource-based-api'
 
-Vapi.setConfig({
+Napi.setConfig({
   apiUrl: 'https://api.awesome-task-manager.com'
 })
 ```
@@ -23,9 +23,9 @@ Vapi.setConfig({
 **store/task.js**
 
 ```js
-import Vapi from 'nuxt-resource-based-api'
+import Napi from 'nuxt-resource-based-api'
 
-export const { state, mutations, actions } = Vapi.createStore(
+export const { state, mutations, actions } = Napi.createStore(
   'task',
   ['index', 'show', 'new', 'edit', 'destroy'],
 )
@@ -37,13 +37,13 @@ That's it! And in addition to creating vuex store, you can create vue component.
 
 ```js
 import Vue from 'vue'
-import Vapi from 'nuxt-resource-based-api'
+import Napi from 'nuxt-resource-based-api'
 
 export default function createComponent(resources) {
   return Vue.extend({
-    fetch: Vapi.generateFetch(resources),
-    computed: Vapi.generateComputed(resources)
-    methods: Vapi.generateMethods(resources)
+    fetch: Napi.generateFetch(resources),
+    computed: Napi.generateComputed(resources)
+    methods: Napi.generateMethods(resources)
   })
 }
 ```
@@ -153,9 +153,9 @@ As minimum configuration, all you need to do just add following code.
 
 ```js
 // store/index.js
-import Vapi from 'nuxt-resource-based-api'
+import Napi from 'nuxt-resource-based-api'
 
-Vapi.setConfig({
+Napi.setConfig({
     apiUrl: 'https://api.awesome-task-manager.com'
 })
 ```
@@ -163,13 +163,13 @@ Vapi.setConfig({
 ```js
 // lib/create_component.js
 import Vue from 'vue'
-import Vapi from 'nuxt-resource-based-api'
+import Napi from 'nuxt-resource-based-api'
 
 export default function createComponent(resources) {
   return Vue.extend({
-    fetch: Vapi.generateFetch(resources),
-    computed: Vapi.generateComputed(resources)
-    methods: Vapi.generateMethods(resources)
+    fetch: Napi.generateFetch(resources),
+    computed: Napi.generateComputed(resources)
+    methods: Napi.generateMethods(resources)
   })
 }
 ```

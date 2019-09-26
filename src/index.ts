@@ -61,7 +61,7 @@ export interface Resource {
 // TODO
 type Context = any // TODO
 
-const Vapi = {
+const Napi = {
   apiUrl: '',
   requestCallback(_action, _resource, _query, _headers, _options, _obj = {}): Promise<any> { throw 'requestCallback or apiUrl must be defined' },
   setConfig(config) {
@@ -97,5 +97,5 @@ const Vapi = {
   generateFetch
 }
 
-export default Vapi
+export default Napi
 
