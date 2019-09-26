@@ -121,8 +121,8 @@ const generator: Generator = {
 const generateMethods = (
   resources: Resource[],
   {
-    createHeaders = (app: Vue) => { return {} as object },
-    errorHandler = (e: any, app: Vue) => { throw e }
+    createHeaders = (app: Vue): object => { return {} },
+    errorHandler = (e: any, app: Vue): void => { throw e }
   } = {}
 ): { [x: string]: IndexMethod | ShowMethod | ShowMethodForSingular | NewMethod | CreateMethod | EditMethod | UpdateMethod | DestroyMethod } => {
   return resources.map(resource => {

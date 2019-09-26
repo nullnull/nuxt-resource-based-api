@@ -32,8 +32,8 @@ async function fetchResource(
 const generateFetch = (
   resources: Resource[],
   {
-    createHeaders = (ctx: Context) => { return {} as object },
-    errorHandler = (e: any, ctx: Context) => { throw e }
+    createHeaders = (ctx: Context): object => { return {} },
+    errorHandler = (e: any, ctx: Context): void => { throw e }
   } = {}
 ): (ctx: Context) => void => {
   return async (context: Context) => {
