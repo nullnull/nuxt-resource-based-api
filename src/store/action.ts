@@ -23,8 +23,8 @@ export default function generateActionsWithAuth(
   const initializingName = initializingResourceName(resource)
 
   const defaultConfig: ActionConfig = {
-    useIndexActionInShowAction: true,
-    useShowActionInEditAction: true,
+    useIndexActionInShowAction: false,
+    useShowActionInEditAction: false,
     refreshPropertiesAlways: false,
     isSingular: false
   }
