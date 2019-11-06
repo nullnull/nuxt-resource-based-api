@@ -64,6 +64,7 @@ type Context = any // TODO
 const Napi = {
   apiUrl: '',
   requestCallback(_action, _resource, _query, _headers, _options, _obj = {}): Promise<any> { throw 'requestCallback or apiUrl must be defined' },
+  actionConfig: undefined,
   setConfig(config) {
     if (config.requestCallback) {
       this.requestCallback = config.requestCallback
@@ -73,6 +74,7 @@ const Napi = {
     } else {
       throw 'requestCallback or apiUrl must be defined'
     }
+    this.actionConfig = config.actionConfig
   },
   createStore(
     resource: string,
@@ -88,7 +90,7 @@ const Napi = {
         actions,
         this.requestCallback,
         extention.actions,
-        options.actionConfig || {}
+        options.actionConfig || this.actionConfig || {}
       )
     }
   },
