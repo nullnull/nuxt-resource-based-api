@@ -1,6 +1,6 @@
 import pluralize from 'pluralize'
 import { cloneDeep } from 'lodash'
-import changeCaseObject from 'change-case-object'
+import changeCaseObject from 'change-case-object-chmurson'
 import {
   camelTo_snake,
   snake_toCamel,

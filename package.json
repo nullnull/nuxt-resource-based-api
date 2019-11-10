@@ -28,7 +28,7 @@
   "dependencies": {
     "@types/node": "^12.7.5",
     "axios": "^0.19.0",
-    "change-case-object": "^2.0.0",
+    "change-case-object-chmurson": "^2.1.0",
     "lodash": "^4.17.15",
     "pluralize": "^8.0.0",
     "vue": "^2.6.10",
