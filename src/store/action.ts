@@ -15,23 +15,12 @@ export default function generateActionsWithAuth(
   actions: Action[],
   requestCallback: Function,
   extention: ActionExtension = {},
-  options: ActionConfig = {}
+  config: ActionConfig
 ) {
-  const isSingular = options.isSingular || false
   const resources = pluralize(resource)
   const editingName = editingResourceName(resource)
   const initializingName = initializingResourceName(resource)
-
-  const defaultConfig: ActionConfig = {
-    useIndexActionInShowAction: false,
-    useShowActionInEditAction: false,
-    refreshPropertiesAlways: false,
-    isSingular: false
-  }
-  const config: ActionConfig = {
-    ...defaultConfig,
-    ...options
-  }
+  const isSingular = config.isSingular || false
 
   if (config.useShowActionInEditAction && actions.includes('edit') && !actions.includes('show')) {
     throw `${resource} must have show action if you want to useShowActionInEditAction be true `

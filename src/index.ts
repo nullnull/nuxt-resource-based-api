@@ -47,6 +47,13 @@ export interface ActionConfig {
   isSingular?: boolean
 }
 
+const defaultConfig: ActionConfig = {
+  useIndexActionInShowAction: false,
+  useShowActionInEditAction: false,
+  refreshPropertiesAlways: false,
+  isSingular: false
+}
+
 export interface Options {
   extention?: Extention,
   actionConfig?: ActionConfig
@@ -58,14 +65,20 @@ export interface Resource {
   options?: Options
 }
 
+export interface Config {
+  requestCallback?: Function
+  apiUrl?: string
+  actionConfig?: ActionConfig
+}
+
 // TODO
 type Context = any // TODO
 
 const Napi = {
   apiUrl: '',
   requestCallback(_action, _resource, _query, _headers, _options, _obj = {}): Promise<any> { throw 'requestCallback or apiUrl must be defined' },
-  actionConfig: undefined,
-  setConfig(config) {
+  actionConfig: {},
+  setConfig(config: Config) {
     if (config.requestCallback) {
       this.requestCallback = config.requestCallback
     } else if (config.apiUrl) {
@@ -74,7 +87,7 @@ const Napi = {
     } else {
       throw 'requestCallback or apiUrl must be defined'
     }
-    this.actionConfig = config.actionConfig
+    this.actionConfig = config.actionConfig || {}
   },
   createStore(
     resource: string,
@@ -90,7 +103,11 @@ const Napi = {
         actions,
         this.requestCallback,
         extention.actions,
-        options.actionConfig || this.actionConfig || {}
+        {
+          ...defaultConfig,
+          ...this.actionConfig,
+          ...options.actionConfig
+        }
       )
     }
   },
