@@ -10,20 +10,14 @@ async function fetchResource(
   errorHandler?: Function,
 ) {
   const { store, route, query } = context
-  const id = route.params.id || query.id
   const headers = createHeaders ? createHeaders(context) : {}
 
   try {
-    if (['show', 'edit'].includes(action) && id !== undefined) {
-      await store.dispatch(`${resource}/${createActionName(resource, action)}`, {
-        headers,
-        id
-      })
-    } else if (['index', 'new', 'show', 'edit'].includes(action)) {
-      await store.dispatch(`${resource}/${createActionName(resource, action)}`, {
-        headers,
-      })
-    }
+    await store.dispatch(`${resource}/${createActionName(resource, action)}`, {
+      headers,
+      query,
+      params: route.params
+    })
   } catch (e) {
     errorHandler(e, context)
   }

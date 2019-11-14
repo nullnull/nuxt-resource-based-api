@@ -10,15 +10,22 @@ const actionToMethod = {
     destroy: 'delete',
 }
 
-const getQueryStrings = (query: object): string => {
-    return query ? '?' + Object.entries(query).map(([k, v]) => `${k}=${v}`).join('&') : ''
+const getQueryStringsForIndexAction = (query, params): string => {
+    // as default, use only 'page' value in query
+    if (query.page) {
+        return `?page=${query.page}`;
+    } else {
+        return ''
+    }
 }
 
 export default function(apiUrl) {
-    return async function (action, resource, query, headers, options, obj = {}) {
+    return async function (action, resource, query: object, params: object, headers, options, obj = {}) {
         const method = actionToMethod[action]
+        const id = { id: undefined, ...query, ...params }.id
+
         if (action === 'index') {
-            return await axios[method](`${apiUrl}/${pluralize(resource)}${getQueryStrings(query)}`, {
+            return await axios[method](`${apiUrl}/${pluralize(resource)}${getQueryStringsForIndexAction(query, params)}`, {
                 headers: headers
             })
         } else if (['create'].includes(action)) {
@@ -26,17 +33,17 @@ export default function(apiUrl) {
                 headers: headers
             })
         } else if (['show', 'destroy'].includes(action)) {
-            const path = options.isSingular ? resource : `${pluralize(resource)}/${query.id}`
+            const path = options.isSingular ? resource : `${pluralize(resource)}/${id}`
             return await axios[method](`${apiUrl}/${path}`, {
                 headers: headers
             })
         } else if (['edit'].includes(action)) {
-            const path = options.isSingular ? `${resource}/edit` : `${pluralize(resource)}/${query.id}/edit`
+            const path = options.isSingular ? `${resource}/edit` : `${pluralize(resource)}/${id}/edit`
             return await axios[method](`${apiUrl}/${path}`, {
                 headers: headers
             })
         } else if (['update'].includes(action)) {
-            const path = options.isSingular ? resource : `${pluralize(resource)}/${query.id}`
+            const path = options.isSingular ? resource : `${pluralize(resource)}/${id}`
             return await axios[method](`${apiUrl}/${path}`, obj, {
                 headers: headers
             })
