@@ -1,6 +1,7 @@
 # nuxt-resource-based-api
 [![npm version](https://badge.fury.io/js/nuxt-resource-based-api.svg)](https://badge.fury.io/js/nuxt-resource-based-api)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+[![CircleCI](https://circleci.com/gh/nullnull/nuxt-resource-based-api.svg?style=svg)](https://circleci.com/gh/nullnull/nuxt-resource-based-api)
 
 This library provide extremely efficient way to handle API which has resource based routing (like Ruby on Rails) on Nuxt.js.
 You can implement vuex stores and vue components with simple and DRY code.
