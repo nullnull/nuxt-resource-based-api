@@ -1,5 +1,4 @@
 import Napi from './../../src/index'
-import { Resource } from '../../dist';
 
 const mockComponent = () => {
   return {
@@ -11,12 +10,12 @@ const mockComponent = () => {
 
 function sharedTest(namespace) {
   const resources = [
-    { resource: `${namespace}article`, action: 'index' },
-    { resource: `${namespace}article`, action: 'show' },
-    { resource: `${namespace}article`, action: 'new' },
-    { resource: `${namespace}article`, action: 'edit' },
-    { resource: `${namespace}article`, action: 'destroy' },
-  ] as Resource[]
+    { resource: `${namespace}article`, action: 'index' as const },
+    { resource: `${namespace}article`, action: 'show' as const },
+    { resource: `${namespace}article`, action: 'new' as const },
+    { resource: `${namespace}article`, action: 'edit' as const },
+    { resource: `${namespace}article`, action: 'destroy' as const },
+  ]
 
   test('it generates method to dispatch fetch record action', async () => {
     const component = mockComponent()

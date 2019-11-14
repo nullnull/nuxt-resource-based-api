@@ -1,5 +1,4 @@
 import Napi from './../../src/index'
-import { Resource } from '../../dist';
 
 const mockContext = () => {
   return {
@@ -22,12 +21,12 @@ const payload = {
 describe('generateFetch', () => {
   test('it dispatches fetch actions', async () => {
     const resources = [
-      { resource: 'article', action: 'index' },
-      { resource: 'article', action: 'show' },
-      { resource: 'article', action: 'new' },
-      { resource: 'article', action: 'edit' },
-      { resource: 'article', action: 'destroy' },
-    ] as Resource[]
+      { resource: 'article', action: 'index' as const },
+      { resource: 'article', action: 'show' as const },
+      { resource: 'article', action: 'new' as const },
+      { resource: 'article', action: 'edit' as const },
+      { resource: 'article', action: 'destroy' as const },
+    ]
 
     const fetch = Napi.generateFetch(resources)
 
@@ -42,10 +41,10 @@ describe('generateFetch', () => {
   describe('with resources with namespace', () => {
     test('it dispatches fetch actions with url with namespace', async () => {
       const resources = [
-        { resource: 'admin/article', action: 'index' },
-        { resource: 'admin/article', action: 'show' },
-        { resource: 'admin/article', action: 'new' },
-      ] as Resource[]
+        { resource: 'admin/article', action: 'index' as const },
+        { resource: 'admin/article', action: 'show' as const },
+        { resource: 'admin/article', action: 'new' as const },
+      ]
 
       const fetch = Napi.generateFetch(resources)
 
@@ -61,8 +60,8 @@ describe('generateFetch', () => {
   describe("with query and params", () => {
     test("it dispatches fetch actions with query and params", async () => {
       const resources = [
-        { resource: "admin/article", action: "index" },
-      ] as Resource[];
+        { resource: "admin/article", action: "index" as const },
+      ]
 
       const fetch = Napi.generateFetch(resources);
 
