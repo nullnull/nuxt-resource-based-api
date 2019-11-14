@@ -13,11 +13,13 @@ async function fetchResource(
   const headers = createHeaders ? createHeaders(context) : {}
 
   try {
-    await store.dispatch(`${resource}/${createActionName(resource, action)}`, {
-      headers,
-      query,
-      params: route.params
-    })
+    if (['index', 'new', 'show', 'edit'].includes(action)) {
+      await store.dispatch(`${resource}/${createActionName(resource, action)}`, {
+        headers,
+        query,
+        params: route.params
+      })
+    }
   } catch (e) {
     errorHandler(e, context)
   }

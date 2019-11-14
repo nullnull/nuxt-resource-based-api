@@ -33,6 +33,7 @@ describe('generateFetch', () => {
 
     const ctx = mockContext()
     await fetch(ctx)
+    expect(ctx.store.dispatch.mock.calls.length).toBe(4);
     expect(ctx.store.dispatch).toHaveBeenCalledWith("article/fetchArticles", payload)
     expect(ctx.store.dispatch).toHaveBeenCalledWith("article/fetchArticle", payload)
     expect(ctx.store.dispatch).toHaveBeenCalledWith("article/initializeArticle", payload)
@@ -50,6 +51,7 @@ describe('generateFetch', () => {
 
       const ctx = mockContext()
       await fetch(ctx)
+      expect(ctx.store.dispatch.mock.calls.length).toBe(3);
       expect(ctx.store.dispatch).toHaveBeenCalledWith("admin/article/fetchArticles", payload)
       expect(ctx.store.dispatch).toHaveBeenCalledWith("admin/article/fetchArticle", payload)
       expect(ctx.store.dispatch).toHaveBeenCalledWith("admin/article/initializeArticle", payload)
@@ -80,6 +82,7 @@ describe('generateFetch', () => {
         }
       };
       await fetch(ctx);
+      expect(ctx.store.dispatch.mock.calls.length).toBe(1);
       expect(ctx.store.dispatch).toHaveBeenCalledWith(
         "admin/article/fetchArticles",
         {
