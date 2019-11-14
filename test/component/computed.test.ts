@@ -1,5 +1,4 @@
 import Napi from './../../src/index'
-import { Resource } from '../../dist';
 
 const ARTICLE_STATE = 'ARTICLE_STATE'
 const ARTICLES_STATE = 'ARTICLES_STATE'
@@ -37,12 +36,12 @@ const mockComponent = () => {
 describe('generateMethods', () => {
   describe('without namespace', () => {
     const resources = [
-      { resource: `article`, action: 'index' },
-      { resource: `article`, action: 'show' },
-      { resource: `article`, action: 'new' },
-      { resource: `article`, action: 'edit' },
-      { resource: `article`, action: 'destroy' },
-    ] as Resource[]
+      { resource: `article`, action: 'index' as const },
+      { resource: `article`, action: 'show' as const },
+      { resource: `article`, action: 'new' as const },
+      { resource: `article`, action: 'edit' as const },
+      { resource: `article`, action: 'destroy' as const },
+    ]
 
     test('it generates computed properties', async () => {
       const computed = Napi.generateComputed(resources)
@@ -55,12 +54,12 @@ describe('generateMethods', () => {
 
   describe('with namespace', () => {
     const resources = [
-      { resource: `admin/article`, action: 'index' },
-      { resource: `admin/article`, action: 'show' },
-      { resource: `admin/article`, action: 'new' },
-      { resource: `admin/article`, action: 'edit' },
-      { resource: `admin/article`, action: 'destroy' },
-    ] as Resource[]
+      { resource: `admin/article`, action: 'index' as const },
+      { resource: `admin/article`, action: 'show' as const },
+      { resource: `admin/article`, action: 'new' as const },
+      { resource: `admin/article`, action: 'edit' as const },
+      { resource: `admin/article`, action: 'destroy' as const },
+    ]
 
     test('it generates computed properties with namespace', async () => {
       const computed = Napi.generateComputed(resources)
