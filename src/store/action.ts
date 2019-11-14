@@ -7,19 +7,22 @@ import {
   editingResourceName,
   initializingResourceName,
   createActionName,
+  listingResourceName,
+  showingResourceName,
 } from '../util'
 import { Action, ActionConfig, ActionExtension } from '../index'
 
 export default function generateActionsWithAuth(
-  resource: string,
+  resourceWithNamespace: string,
   actions: Action[],
   requestCallback: Function,
   extention: ActionExtension = {},
   config: ActionConfig
 ) {
-  const resources = pluralize(resource)
-  const editingName = editingResourceName(resource)
-  const initializingName = initializingResourceName(resource)
+  const resource = showingResourceName(resourceWithNamespace)
+  const resources = listingResourceName(resourceWithNamespace)
+  const editingName = editingResourceName(resourceWithNamespace)
+  const initializingName = initializingResourceName(resourceWithNamespace)
   const isSingular = config.isSingular || false
 
   if (config.useShowActionInEditAction && actions.includes('edit') && !actions.includes('show')) {
@@ -28,18 +31,20 @@ export default function generateActionsWithAuth(
 
   const indexAction = {
     async [createActionName(resource, 'index')]({ commit, state }, { force: force, query: query, headers: headers }) {
+
       if (!state.shouldRefreshIndexState && !force) {
         return
       }
       const { data } = await requestCallback(
         'index',
-        camelTo_snake(resource),
+        camelTo_snake(resourceWithNamespace),
         query,
         headers,
         {
           isSingular: isSingular
         }
       )
+
       commit(snake_toCamel(`set_${pluralize(resource)}`), data)
     },
     [snake_toCamel(`invalidate_${pluralize(resource)}`)]({ commit }) {
@@ -54,7 +59,7 @@ export default function generateActionsWithAuth(
       }
       const { data } = await requestCallback(
         'show',
-        camelTo_snake(resource),
+        camelTo_snake(resourceWithNamespace),
         query,
         headers,
         {
@@ -86,7 +91,7 @@ export default function generateActionsWithAuth(
         }
         const { data } = await requestCallback(
           'show',
-          camelTo_snake(resource),
+          camelTo_snake(resourceWithNamespace),
           { ...query, id: id },
           headers,
           {
@@ -115,7 +120,7 @@ export default function generateActionsWithAuth(
     async [createActionName(resource, 'create')]({ commit, state }, { query: query, headers: headers, record: record }) {
       const { data } = await requestCallback(
         'create',
-        camelTo_snake(resource),
+        camelTo_snake(resourceWithNamespace),
         query,
         headers,
         {
@@ -148,7 +153,7 @@ export default function generateActionsWithAuth(
       } else {
         const { data } = await requestCallback(
           'edit',
-          camelTo_snake(resource),
+          camelTo_snake(resourceWithNamespace),
           { ...query, id: id },
           headers,
           {
@@ -164,7 +169,7 @@ export default function generateActionsWithAuth(
     async [createActionName(resource, 'update')]({ commit, state }, { query: query, headers: headers, record: record }) {
       const { data } = await requestCallback(
         'update',
-        camelTo_snake(resource),
+        camelTo_snake(resourceWithNamespace),
         isSingular ? query : { ...query, id: (record || state[editingName]).id },
         headers,
         {
@@ -187,7 +192,7 @@ export default function generateActionsWithAuth(
     async [createActionName(resource, 'destroy')]({ commit }, { id: id, query: query, headers: headers }) {
       await requestCallback(
         'destroy',
-        camelTo_snake(resource),
+        camelTo_snake(resourceWithNamespace),
         { ...query, id: id },
         headers,
         {

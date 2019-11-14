@@ -1,19 +1,26 @@
-import pluralize from 'pluralize'
-import { editingResourceName, initializingResourceName } from '../util'
+import { showingResourceName, listingResourceName, editingResourceName, initializingResourceName } from '../util'
 import { Resource } from '../index';
 
 export interface Computeds {
   [x: string]: () => any
 }
 
+function accessPropertyRecursively(obj, propertyNames) {
+  if (propertyNames.length == 0) {
+    return obj
+  }
+  return accessPropertyRecursively(obj[propertyNames[0]], propertyNames.slice(1, 1000))
+}
+
 const generateComputed = (resources: Resource[]) => {
   return resources
     .map(r => {
       let name = ""
+
       if (r.action === 'show') {
-        name = r.resource
+        name = showingResourceName(r.resource)
       } else if (r.action === 'index') {
-        name = pluralize(r.resource)
+        name = listingResourceName(r.resource)
       } else if (r.action === 'edit') {
         name = editingResourceName(r.resource)
       } else if (r.action === 'new') {
@@ -22,7 +29,7 @@ const generateComputed = (resources: Resource[]) => {
         return
       }
       return {
-        [name]: function() { return this.$store.state[r.resource][name] }
+        [name]: function () { return accessPropertyRecursively(this.$store.state, [...r.resource.split('/'), name]) }
       }
     })
     .filter(x => x)
