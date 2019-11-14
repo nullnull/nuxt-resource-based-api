@@ -178,5 +178,6 @@ You can also customize request handler, error handler and so on. [Please see Wik
 
 # Typescript Support
 Unfortunately Typescript is incompatible to dynamic generating codes like this library.
+
 But you can use typescript with some trick and we recommend to use typescript. See [Wiki](https://github.com/nullnull/nuxt-resource-based-api/wiki/Typescript-support) for details.
 
