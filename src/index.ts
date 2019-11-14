@@ -90,16 +90,16 @@ const Napi = {
     this.actionConfig = config.actionConfig || {}
   },
   createStore(
-    resource: string,
+    resourceWithNamespace: string,
     actions: Action[],
     options: Options = {},
   ) {
     const extention = options.extention || {}
     return {
-      state: () => generateInitialState(resource, actions, extention.state),
-      mutations: generateMutations(resource, actions, extention.mutations),
+      state: () => generateInitialState(resourceWithNamespace, actions, extention.state),
+      mutations: generateMutations(resourceWithNamespace, actions, extention.mutations),
       actions: generateActionsWithAuth(
-        resource,
+        resourceWithNamespace,
         actions,
         this.requestCallback,
         extention.actions,

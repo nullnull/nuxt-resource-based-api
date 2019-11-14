@@ -1,9 +1,8 @@
-import pluralize from 'pluralize'
-import { editingResourceName, initializingResourceName } from '../util'
+import { editingResourceName, initializingResourceName, listingResourceName, showingResourceName } from '../util'
 import { Action, StateExtension, State } from '../index'
 
 export default function generateInitialState(
-  resource: string,
+  resourceWithNamespace: string,
   actions: Action[],
   extension: StateExtension = {}
 ): State {
@@ -11,16 +10,16 @@ export default function generateInitialState(
   state["shouldRefreshIndexState"] = true
   state["shouldRefreshShowState"] = true
   if (actions.includes('show') || actions.includes('edit')) {
-    state[resource] = null
+    state[showingResourceName(resourceWithNamespace)] = null
   }
   if (actions.includes('index')) {
-    state[pluralize(resource)] = []
+    state[listingResourceName(resourceWithNamespace)] = []
   }
   if (actions.includes('edit')) {
-    state[editingResourceName(resource)] = null
+    state[editingResourceName(resourceWithNamespace)] = null
   }
   if (actions.includes('new')) {
-    state[initializingResourceName(resource)] = null
+    state[initializingResourceName(resourceWithNamespace)] = null
   }
 
   const initialState = {
