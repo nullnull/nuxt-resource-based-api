@@ -32,6 +32,7 @@ export default function generateMutations(resourceWithNamespace: string, actions
   const showMutations = {
     [snake_toCamel(`set_${showingResourceName(resourceWithNamespace)}`)](state, data) {
       state[showingResourceName(resourceWithNamespace)] = changeCaseObject.camelCase(data)
+      state.shouldRefreshShowState = false
     },
     [snake_toCamel(`invalidate_${showingResourceName(resourceWithNamespace)}`)](state) {
       state.shouldRefreshShowState = true
