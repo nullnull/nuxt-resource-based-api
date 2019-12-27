@@ -1,5 +1,5 @@
 import { Resource } from "../index";
-import { createActionName, last } from '../util'
+import { createActionName, last, snake_toCamel } from '../util'
 import pluralize from 'pluralize'
 type Context = any // TODO
 
@@ -13,14 +13,14 @@ const defaultQueryHandler = (resourceWithNamespace: string, action: string, cont
   const resource = last(resourceWithNamespace.split('/'))
 
   if (action === 'index') {
-    const resourceFromPath = pathSplited[pathSplited.length - 1]
+    const resourceFromPath = snake_toCamel(pathSplited[pathSplited.length - 1])
     if (resourceFromPath === pluralize(resource)) {
       return queryAndParam
     } else {
       return {}
     }
   } else {
-    const resourceFromPath = pathSplited[pathSplited.length - 2]
+    const resourceFromPath = snake_toCamel(pathSplited[pathSplited.length - 2])
     if (queryAndParam[`${resource}Id`]) {
       return {
         id: queryAndParam[`${resource}Id`]
