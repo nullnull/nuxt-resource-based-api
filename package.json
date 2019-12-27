@@ -1,6 +1,6 @@
 {
   "name": "nuxt-resource-based-api",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "description": "Provide extremely efficient way to handle API on Nuxt.js.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
