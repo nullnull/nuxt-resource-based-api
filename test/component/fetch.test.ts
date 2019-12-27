@@ -6,7 +6,8 @@ const mockContext = () => {
       dispatch: jest.fn((actionName, payload) => { return {} })
     },
     route: {
-      params: {}
+      params: {},
+      path: '/'
     },
     query: {},
   }
@@ -57,35 +58,128 @@ describe('generateFetch', () => {
   })
 
   describe("with query and params", () => {
-    test("it dispatches fetch actions with query and params", async () => {
+    test("it dispatches fetch actions for index with query", async () => {
+      const ctx = {
+        ...mockContext(),
+        route: {
+          params: {
+            userId: 1,
+          },
+          path: '/users/1/articles'
+        },
+        query: {
+          tagId: 3
+        }
+      };
       const resources = [
         { resource: "admin/article", action: "index" as const },
       ]
-
       const fetch = Napi.generateFetch(resources);
 
-      const ctx = {
-        store: {
-          dispatch: jest.fn((actionName, payload) => {
-            return {};
-          })
-        },
-        route: {
-          params: {
-            foo: 1,
-          }
-        },
-        query: {
-          bar: 1
-        }
-      };
       await fetch(ctx);
       expect(ctx.store.dispatch.mock.calls.length).toBe(1);
       expect(ctx.store.dispatch).toHaveBeenCalledWith(
         "admin/article/fetchArticles",
         {
           headers: {},
-          query: { bar: 1 }
+          query: {
+            tagId: 3,
+            userId: 1,
+          }
+        }
+      );
+    });
+
+    test("it dispatches fetch actions for show with query", async () => {
+      const resources = [
+        { resource: "admin/article", action: "show" as const },
+      ]
+      const fetch = Napi.generateFetch(resources);
+      const ctx = {
+        ...mockContext(),
+        route: {
+          params: {
+            userId: 1,
+            id: 2,
+          },
+          path: '/users/1/articles/2'
+        },
+        query: {
+          tagId: 3
+        }
+      }
+
+      await fetch(ctx);
+      expect(ctx.store.dispatch.mock.calls.length).toBe(1);
+      expect(ctx.store.dispatch).toHaveBeenCalledWith(
+        "admin/article/fetchArticle",
+        {
+          headers: {},
+          query: {
+            id: 2,
+          }
+        }
+      );
+    });
+
+    test("it dispatches fetch actions for show with query", async () => {
+      const resources = [
+        { resource: "admin/user", action: "show" as const },
+      ]
+      const fetch = Napi.generateFetch(resources);
+      const ctx = {
+        ...mockContext(),
+        route: {
+          params: {
+            userId: 1,
+            id: 2,
+          },
+          path: '/users/1/articles/2'
+        },
+        query: {
+          tagId: 3
+        }
+      }
+
+      await fetch(ctx);
+      expect(ctx.store.dispatch.mock.calls.length).toBe(1);
+      expect(ctx.store.dispatch).toHaveBeenCalledWith(
+        "admin/user/fetchUser",
+        {
+          headers: {},
+          query: {
+            id: 1,
+          }
+        }
+      );
+    });
+
+    test("it dispatches fetch actions for show for singular resource with query", async () => {
+      const resources = [
+        { resource: "admin/me", action: "show" as const },
+      ]
+      const fetch = Napi.generateFetch(resources);
+      const ctx = {
+        ...mockContext(),
+        route: {
+          params: {
+            userId: 1,
+            id: 2,
+          },
+          path: '/users/1/articles/2'
+        },
+        query: {
+          tagId: 3
+        }
+      }
+
+      await fetch(ctx);
+      expect(ctx.store.dispatch.mock.calls.length).toBe(1);
+      expect(ctx.store.dispatch).toHaveBeenCalledWith(
+        "admin/me/fetchMe",
+        {
+          headers: {},
+          query: {}
         }
       );
     });
