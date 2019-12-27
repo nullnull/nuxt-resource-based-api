@@ -32,7 +32,7 @@ export default function generateActionsWithAuth(
   const indexAction = {
     async [createActionName(resource, 'index')]({ commit, state }, { force: force, query: query, headers: headers }) {
 
-      if (!state.shouldRefreshIndexState && !force) {
+      if (!state.shouldRefreshIndexState && !force && state.lastQueryForIndex !== query) {
         return
       }
       const { data } = await requestCallback(
@@ -45,7 +45,7 @@ export default function generateActionsWithAuth(
         }
       );
 
-      commit(snake_toCamel(`set_${pluralize(resource)}`), data)
+      commit(snake_toCamel(`set_${pluralize(resource)}`), data, query)
     },
     [snake_toCamel(`invalidate_${pluralize(resource)}`)]({ commit }) {
       commit(snake_toCamel(`invalidate_${pluralize(resource)}`))

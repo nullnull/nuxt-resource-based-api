@@ -9,6 +9,7 @@ describe('createStore', () => {
     expect(state()).toEqual({
       shouldRefreshIndexState: true,
       shouldRefreshShowState: true,
+      lastQueryForIndex: null,
       article: null,
       articles: [],
       editingArticle: null,
@@ -25,6 +26,7 @@ describe('createStore', () => {
       expect(state()).toEqual({
         shouldRefreshIndexState: true,
         shouldRefreshShowState: true,
+        lastQueryForIndex: null,
         article: null,
         articles: [],
         editingArticle: null,
