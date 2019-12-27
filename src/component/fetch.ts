@@ -17,7 +17,6 @@ async function fetchResource(
       await store.dispatch(`${resource}/${createActionName(resource, action)}`, {
         headers,
         query,
-        params: route.params
       })
     }
   } catch (e) {

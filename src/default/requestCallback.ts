@@ -10,7 +10,7 @@ const actionToMethod = {
     destroy: 'delete',
 }
 
-const getQueryStringsForIndexAction = (query, params): string => {
+const getQueryStringsForIndexAction = (query): string => {
     // as default, use only 'page' value in query
     if (query.page) {
         return `?page=${query.page}`;
@@ -20,12 +20,12 @@ const getQueryStringsForIndexAction = (query, params): string => {
 }
 
 export default function(apiUrl) {
-    return async function (action, resource, query: object, params: object, headers, options, obj = {}) {
+    return async function (action, resource, query: object, headers, options, obj = {}) {
         const method = actionToMethod[action]
-        const id = { id: undefined, ...query, ...params }.id
+        const id = { id: undefined, ...query }.id
 
         if (action === 'index') {
-            return await axios[method](`${apiUrl}/${pluralize(resource)}${getQueryStringsForIndexAction(query, params)}`, {
+            return await axios[method](`${apiUrl}/${pluralize(resource)}${getQueryStringsForIndexAction(query)}`, {
                 headers: headers
             })
         } else if (['create'].includes(action)) {

@@ -14,7 +14,6 @@ const mockContext = () => {
 
 const payload = {
   headers: {},
-  params: {},
   query: {},
 };
 
@@ -86,7 +85,6 @@ describe('generateFetch', () => {
         "admin/article/fetchArticles",
         {
           headers: {},
-          params: { foo: 1 },
           query: { bar: 1 }
         }
       );
