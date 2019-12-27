@@ -5,8 +5,8 @@ import { Action, MutationExtension } from '../index'
 
 export default function generateMutations(resourceWithNamespace: string, actions: Action[], extension: MutationExtension = {}) {
   const indexMutation = {
-    [snake_toCamel(`set_${listingResourceName(resourceWithNamespace)}`)](state, data, query) {
-      state[listingResourceName(resourceWithNamespace)] = changeCaseObject.camelCase(data)
+    [snake_toCamel(`set_${listingResourceName(resourceWithNamespace)}`)](state, { records, query }) {
+      state[listingResourceName(resourceWithNamespace)] = changeCaseObject.camelCase(records)
       state.lastQueryForIndex = query
       state.shouldRefreshIndexState = false
     },
