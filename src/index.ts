@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import generateInitialState from './store/state'
 import generateMutations from './store/mutation'
 import generateActionsWithAuth from './store/action'
@@ -67,7 +66,7 @@ export interface Resource {
 
 export interface Config {
   requestCallback?: Function
-  apiUrl?: string
+  axios?: any
   actionConfig?: ActionConfig
 }
 
@@ -75,17 +74,17 @@ export interface Config {
 type Context = any // TODO
 
 const Napi = {
-  apiUrl: '',
-  requestCallback(_action, _resource, _query, _headers, _options, _obj = {}): Promise<any> { throw 'requestCallback or apiUrl must be defined' },
+  axios: undefined,
+  requestCallback(_action, _resource, _query, _headers, _options, _obj = {}): Promise<any> { throw 'requestCallback or axios instance must be passed' },
   actionConfig: {},
   setConfig(config: Config) {
     if (config.requestCallback) {
       this.requestCallback = config.requestCallback
-    } else if (config.apiUrl) {
-      this.apiUrl = config.apiUrl
-      this.requestCallback = defaultRequestCallback(this.apiUrl)
+    } else if (config.axios) {
+      this.axios = config.axios
+      this.requestCallback = defaultRequestCallback(this.axios)
     } else {
-      throw 'requestCallback or apiUrl must be defined'
+      throw 'requestCallback or axios instance must be passed'
     }
     this.actionConfig = config.actionConfig || {}
   },
