@@ -1,5 +1,4 @@
 import Napi from './../../src/index'
-import axios from 'axios'
 
 function mockedContext(state, commit) {
   return {
@@ -8,19 +7,25 @@ function mockedContext(state, commit) {
   }
 }
 
-const apiUrl = 'http://localhost:99999/api'
+const mockedAxios = {
+  get() {},
+  post() {},
+  put() {},
+  delete() {},
+}
+
 Napi.setConfig({
-  apiUrl
+  axios: mockedAxios
 });
 const responseBody = { body: 'body' }
 
-function sharedTests(actions, state, apiUrlWithNamespace) {
+function sharedTests(actions, state, apiNamespace) {
   test('send get request to show records', async () => {
     const commit = jest.fn()
 
     await (actions as any).fetchArticles(mockedContext(state, commit), { force: true })
     expect(axios.get).toHaveBeenCalledWith(
-      `${apiUrlWithNamespace}/articles`,
+      `${apiNamespace}/articles`,
       { "headers": undefined }
     )
     expect(commit).toHaveBeenCalledWith("setArticles", { query: undefined, records: responseBody })
@@ -32,7 +37,7 @@ function sharedTests(actions, state, apiUrlWithNamespace) {
     const id = 1
     await (actions as any).fetchArticle(mockedContext(state, commit), { id: id, force: true })
     expect(axios.get).toHaveBeenCalledWith(
-      `${apiUrlWithNamespace}/articles/${id}`,
+      `${apiNamespace}/articles/${id}`,
       { "headers": undefined }
     )
     expect(commit).toHaveBeenCalledWith("setArticle", responseBody)
@@ -47,7 +52,7 @@ function sharedTests(actions, state, apiUrlWithNamespace) {
     }
     await (actions as any).createArticle(mockedContext(state, commit), { record })
     expect(axios.post).toHaveBeenCalledWith(
-      `${apiUrlWithNamespace}/articles`,
+      `${apiNamespace}/articles`,
       { "article": record },
       { "headers": undefined }
     )
@@ -64,7 +69,7 @@ function sharedTests(actions, state, apiUrlWithNamespace) {
     }
     await (actions as any).updateArticle(mockedContext(state, commit), { record })
     expect(axios.put).toHaveBeenCalledWith(
-      `${apiUrlWithNamespace}/articles/${record.id}`,
+      `${apiNamespace}/articles/${record.id}`,
       { "article": record },
       { "headers": undefined }
     )
@@ -78,7 +83,7 @@ function sharedTests(actions, state, apiUrlWithNamespace) {
     const id = 1
     await (actions as any).destroyArticle(mockedContext(state, commit), { id })
     expect(axios.delete).toHaveBeenCalledWith(
-      `${apiUrlWithNamespace}/articles/${id}`,
+      `${apiNamespace}/articles/${id}`,
       { "headers": undefined }
     )
     expect(commit).toHaveBeenCalledWith("removeRecordInArticles", id)
@@ -99,7 +104,7 @@ describe('actions of createStore', () => {
       ['index', 'show', 'new', 'edit', 'destroy']
     );
 
-    sharedTests(actions, state, apiUrl)
+    sharedTests(actions, state, '')
   })
 
   describe('with resource with namespace', () => {
@@ -108,6 +113,6 @@ describe('actions of createStore', () => {
       ['index', 'show', 'new', 'edit', 'destroy']
     );
 
-    sharedTests(actions, state, `${apiUrl}/admin`) // call url with namespace
+    sharedTests(actions, state, `/admin`) // call url with namespace
   })
 })
