@@ -26,23 +26,23 @@
   },
   "homepage": "https://github.com/nullnull/nuxt-resource-based-api#readme",
   "dependencies": {
-    "@types/node": "^12.7.5",
+    "@types/node": "^12.12.22",
     "change-case-object-chmurson": "^2.1.0",
     "lodash": "^4.17.15",
     "pluralize": "^8.0.0",
-    "vue": "^2.6.10",
-    "vuex": "^3.1.1"
+    "vue": "^2.6.11",
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.0",
-    "@babel/preset-env": "^7.6.0",
-    "@types/jest": "^24.0.18",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@types/jest": "^24.0.25",
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0",
-    "ts-jest": "^24.1.0",
-    "ts-loader": "^6.1.2",
-    "typescript": "^3.6.3",
-    "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.9"
+    "ts-jest": "^24.2.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   }
 }
