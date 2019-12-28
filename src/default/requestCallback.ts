@@ -1,4 +1,3 @@
-import axios from 'axios'
 import pluralize from 'pluralize'
 import { URLSearchParams } from 'url'
 
@@ -17,32 +16,32 @@ const getQueryStrings = (query): string => {
     return searchParams.toString() === '' ? '' : '?' + searchParams.toString()
 }
 
-export default function(apiUrl) {
+export default function(axios) {
     return async function (action, resource, query: object, headers, options, obj = {}) {
         const method = actionToMethod[action]
         const id = { id: undefined, ...query }.id
 
         if (action === 'index') {
-            return await axios[method](`${apiUrl}/${pluralize(resource)}${getQueryStrings(query)}`, {
+            return await axios[method](`/${pluralize(resource)}${getQueryStrings(query)}`, {
                 headers: headers
             })
         } else if (['create'].includes(action)) {
-            return await axios[method](`${apiUrl}/${pluralize(resource)}`, obj, {
+            return await axios[method](`/${pluralize(resource)}`, obj, {
                 headers: headers
             })
         } else if (['show', 'destroy'].includes(action)) {
             const path = options.isSingular ? resource : `${pluralize(resource)}/${id}`
-            return await axios[method](`${apiUrl}/${path}`, {
+            return await axios[method](`/${path}`, {
                 headers: headers
             })
         } else if (['edit'].includes(action)) {
             const path = options.isSingular ? `${resource}/edit` : `${pluralize(resource)}/${id}/edit`
-            return await axios[method](`${apiUrl}/${path}`, {
+            return await axios[method](`/${path}`, {
                 headers: headers
             })
         } else if (['update'].includes(action)) {
             const path = options.isSingular ? resource : `${pluralize(resource)}/${id}`
-            return await axios[method](`${apiUrl}/${path}`, obj, {
+            return await axios[method](`/${path}`, obj, {
                 headers: headers
             })
         } else {

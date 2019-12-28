@@ -1,5 +1,4 @@
 import Napi from './../../src/index'
-import axios from 'axios'
 
 function mockedContext(state, commit) {
   return {
@@ -8,19 +7,25 @@ function mockedContext(state, commit) {
   }
 }
 
-const apiUrl = 'http://localhost:99999/api'
+const mockedAxios = {
+  get() {},
+  post() {},
+  put() {},
+  delete() {},
+}
+
 Napi.setConfig({
-  apiUrl
+  axios: mockedAxios
 });
 const responseBody = { body: 'body' }
 
-function sharedTests(actions, state, apiUrlWithNamespace) {
+function sharedTests(actions, state, apiNamespace) {
   test('send get request to show records', async () => {
     const commit = jest.fn()
 
     await (actions as any).fetchArticles(mockedContext(state, commit), { force: true })
-    expect(axios.get).toHaveBeenCalledWith(
-      `${apiUrlWithNamespace}/articles`,
+    expect(mockedAxios.get).toHaveBeenCalledWith(
+      `${apiNamespace}/articles`,
       { "headers": undefined }
     )
     expect(commit).toHaveBeenCalledWith("setArticles", { query: undefined, records: responseBody })
@@ -31,8 +36,8 @@ function sharedTests(actions, state, apiUrlWithNamespace) {
 
     const id = 1
     await (actions as any).fetchArticle(mockedContext(state, commit), { id: id, force: true })
-    expect(axios.get).toHaveBeenCalledWith(
-      `${apiUrlWithNamespace}/articles/${id}`,
+    expect(mockedAxios.get).toHaveBeenCalledWith(
+      `${apiNamespace}/articles/${id}`,
       { "headers": undefined }
     )
     expect(commit).toHaveBeenCalledWith("setArticle", responseBody)
@@ -46,8 +51,8 @@ function sharedTests(actions, state, apiUrlWithNamespace) {
       name: 'name1'
     }
     await (actions as any).createArticle(mockedContext(state, commit), { record })
-    expect(axios.post).toHaveBeenCalledWith(
-      `${apiUrlWithNamespace}/articles`,
+    expect(mockedAxios.post).toHaveBeenCalledWith(
+      `${apiNamespace}/articles`,
       { "article": record },
       { "headers": undefined }
     )
@@ -63,8 +68,8 @@ function sharedTests(actions, state, apiUrlWithNamespace) {
       name: 'name1'
     }
     await (actions as any).updateArticle(mockedContext(state, commit), { record })
-    expect(axios.put).toHaveBeenCalledWith(
-      `${apiUrlWithNamespace}/articles/${record.id}`,
+    expect(mockedAxios.put).toHaveBeenCalledWith(
+      `${apiNamespace}/articles/${record.id}`,
       { "article": record },
       { "headers": undefined }
     )
@@ -77,8 +82,8 @@ function sharedTests(actions, state, apiUrlWithNamespace) {
 
     const id = 1
     await (actions as any).destroyArticle(mockedContext(state, commit), { id })
-    expect(axios.delete).toHaveBeenCalledWith(
-      `${apiUrlWithNamespace}/articles/${id}`,
+    expect(mockedAxios.delete).toHaveBeenCalledWith(
+      `${apiNamespace}/articles/${id}`,
       { "headers": undefined }
     )
     expect(commit).toHaveBeenCalledWith("removeRecordInArticles", id)
@@ -87,10 +92,10 @@ function sharedTests(actions, state, apiUrlWithNamespace) {
 
 describe('actions of createStore', () => {
   beforeEach(() => {
-    (axios as any).get = jest.fn((_url, _options) => { return { data: responseBody } });
-    (axios as any).post = jest.fn((_url, _body, _options) => { return { data: responseBody } });
-    (axios as any).delete = jest.fn((_url, _options) => { return {} });
-    (axios as any).put = jest.fn((_url, _body, _options) => { return { data: responseBody } });
+    (mockedAxios as any).get = jest.fn((_url, _options) => { return { data: responseBody } });
+    (mockedAxios as any).post = jest.fn((_url, _body, _options) => { return { data: responseBody } });
+    (mockedAxios as any).delete = jest.fn((_url, _options) => { return {} });
+    (mockedAxios as any).put = jest.fn((_url, _body, _options) => { return { data: responseBody } });
   });
 
   describe('with no namespace', () => {
@@ -99,7 +104,7 @@ describe('actions of createStore', () => {
       ['index', 'show', 'new', 'edit', 'destroy']
     );
 
-    sharedTests(actions, state, apiUrl)
+    sharedTests(actions, state, '')
   })
 
   describe('with resource with namespace', () => {
@@ -108,6 +113,6 @@ describe('actions of createStore', () => {
       ['index', 'show', 'new', 'edit', 'destroy']
     );
 
-    sharedTests(actions, state, `${apiUrl}/admin`) // call url with namespace
+    sharedTests(actions, state, `/admin`) // call url with namespace
   })
 })
