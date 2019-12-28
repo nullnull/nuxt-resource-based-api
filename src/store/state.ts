@@ -6,14 +6,15 @@ export default function generateInitialState(
   actions: Action[],
   extension: StateExtension = {}
 ): State {
-  let state = {}
-  state["shouldRefreshIndexState"] = true
-  state["shouldRefreshShowState"] = true
+  let state: any = {}
   if (actions.includes('show') || actions.includes('edit')) {
     state[showingResourceName(resourceWithNamespace)] = null
+    state.shouldRefreshShowState = true
   }
   if (actions.includes('index')) {
     state[listingResourceName(resourceWithNamespace)] = []
+    state.lastQueryForIndex = null
+    state.shouldRefreshIndexState = true
   }
   if (actions.includes('edit')) {
     state[editingResourceName(resourceWithNamespace)] = null

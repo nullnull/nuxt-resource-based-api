@@ -1,5 +1,6 @@
 import axios from 'axios'
 import pluralize from 'pluralize'
+import { URLSearchParams } from 'url'
 
 const actionToMethod = {
     index: 'get',
@@ -10,22 +11,19 @@ const actionToMethod = {
     destroy: 'delete',
 }
 
-const getQueryStringsForIndexAction = (query, params): string => {
-    // as default, use only 'page' value in query
-    if (query.page) {
-        return `?page=${query.page}`;
-    } else {
-        return ''
-    }
+const getQueryStrings = (query): string => {
+    const searchParams = new (URLSearchParams || window.URLSearchParams)('')
+    Object.entries(query).forEach(([k, v]) => searchParams.append(k, v as string))
+    return searchParams.toString() === '' ? '' : '?' + searchParams.toString()
 }
 
 export default function(apiUrl) {
-    return async function (action, resource, query: object, params: object, headers, options, obj = {}) {
+    return async function (action, resource, query: object, headers, options, obj = {}) {
         const method = actionToMethod[action]
-        const id = { id: undefined, ...query, ...params }.id
+        const id = { id: undefined, ...query }.id
 
         if (action === 'index') {
-            return await axios[method](`${apiUrl}/${pluralize(resource)}${getQueryStringsForIndexAction(query, params)}`, {
+            return await axios[method](`${apiUrl}/${pluralize(resource)}${getQueryStrings(query)}`, {
                 headers: headers
             })
         } else if (['create'].includes(action)) {

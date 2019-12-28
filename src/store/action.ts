@@ -30,23 +30,22 @@ export default function generateActionsWithAuth(
   }
 
   const indexAction = {
-    async [createActionName(resource, 'index')]({ commit, state }, { force: force, query: query, params: params, headers: headers }) {
+    async [createActionName(resource, 'index')]({ commit, state }, { force: force, query: query, headers: headers }) {
 
-      if (!state.shouldRefreshIndexState && !force) {
+      if (!state.shouldRefreshIndexState && !force && JSON.stringify(state.lastQueryForIndex) === JSON.stringify(query)) {
         return
       }
       const { data } = await requestCallback(
         "index",
         camelTo_snake(resourceWithNamespace),
         query || {},
-        params || {},
         headers,
         {
           isSingular: isSingular
         }
       );
 
-      commit(snake_toCamel(`set_${pluralize(resource)}`), data)
+      commit(snake_toCamel(`set_${pluralize(resource)}`), { records: data, query: query })
     },
     [snake_toCamel(`invalidate_${pluralize(resource)}`)]({ commit }) {
       commit(snake_toCamel(`invalidate_${pluralize(resource)}`))
@@ -54,7 +53,7 @@ export default function generateActionsWithAuth(
   }
 
   const showActionForSingularResource = {
-    async [createActionName(resource, 'show')]({ commit, state }, { force: force, query: query, params: params, headers: headers }) {
+    async [createActionName(resource, 'show')]({ commit, state }, { force: force, query: query, headers: headers }) {
       if (!state.shouldRefreshShowState && !force) {
         return
       }
@@ -62,7 +61,6 @@ export default function generateActionsWithAuth(
         "show",
         camelTo_snake(resourceWithNamespace),
         query || {},
-        params || {},
         headers,
         {
           isSingular: isSingular
@@ -76,11 +74,11 @@ export default function generateActionsWithAuth(
   }
 
   const showActionForResources = {
-    async [createActionName(resource, 'show')]({ commit, dispatch, state }, { id: id, force: force, query: query, params: params, headers: headers }) {
-      id = id || params.id || query.id;
+    async [createActionName(resource, 'show')]({ commit, dispatch, state }, { id: id, force: force, query: query, headers: headers }) {
+      id = id || query.id;
       if (config.useIndexActionInShowAction) {
         if (state.shouldRefreshIndexState) {
-          await dispatch(createActionName(resource, 'index'), { force: force, query: query, params: params, headers: headers })
+          await dispatch(createActionName(resource, 'index'), { force: force, query: query, headers: headers })
         }
         const data = state[resources].find(x => x.id == id)
         if (data === undefined) {
@@ -96,7 +94,6 @@ export default function generateActionsWithAuth(
           "show",
           camelTo_snake(resourceWithNamespace),
           { ...query, id: id },
-          params || {},
           headers,
           {
             isSingular: isSingular
@@ -121,12 +118,11 @@ export default function generateActionsWithAuth(
   }
 
   const createAction = {
-    async [createActionName(resource, 'create')]({ commit, state }, { query: query, params: params, headers: headers, record: record }) {
+    async [createActionName(resource, 'create')]({ commit, state }, { query: query, headers: headers, record: record }) {
       const { data } = await requestCallback(
         "create",
         camelTo_snake(resourceWithNamespace),
         query || {},
-        params || {},
         headers,
         {
           isSingular: isSingular
@@ -149,15 +145,15 @@ export default function generateActionsWithAuth(
   }
 
   const editAction = {
-    async [createActionName(resource, 'edit')]({ commit, dispatch, state }, { id: id, force: force, query: query, params: params, headers: headers }) {
-      id = id || params.id || query.id
+    async [createActionName(resource, 'edit')]({ commit, dispatch, state }, { id: id, force: force, query: query, headers: headers }) {
+      id = id || query.id
       if (state[editingName] && state[editingName].id == id && !config.refreshPropertiesAlways) {
         return
       }
 
       if (config.useShowActionInEditAction) {
         if (!state[resource] || state[resource].id != id) {
-          await dispatch(createActionName(resource, 'show'), { id: id, force: force, query: query, params: params, headers: headers })
+          await dispatch(createActionName(resource, 'show'), { id: id, force: force, query: query, headers: headers })
         }
         commit(snake_toCamel(`set_editing_${resource}`), cloneDeep(state[resource]))
       } else {
@@ -165,7 +161,6 @@ export default function generateActionsWithAuth(
           "edit",
           camelTo_snake(resourceWithNamespace),
           { ...query, id: id },
-          params || {},
           headers,
           {
             isSingular: isSingular
@@ -177,12 +172,11 @@ export default function generateActionsWithAuth(
   }
 
   const updateAction = {
-    async [createActionName(resource, 'update')]({ commit, state }, { query: query, params: params, headers: headers, record: record }) {
+    async [createActionName(resource, 'update')]({ commit, state }, { query: query, headers: headers, record: record }) {
       const { data } = await requestCallback(
         'update',
         camelTo_snake(resourceWithNamespace),
         isSingular ? query : { ...query, id: (record || state[editingName]).id },
-        params || {},
         headers,
         {
           isSingular: isSingular
@@ -201,13 +195,12 @@ export default function generateActionsWithAuth(
   }
 
   const destroyAction = {
-    async [createActionName(resource, 'destroy')]({ commit }, { id: id, query: query, params: params, headers: headers }) {
-      id = id || params.id || query.id;
+    async [createActionName(resource, 'destroy')]({ commit }, { id: id, query: query, headers: headers }) {
+      id = id || query.id;
       await requestCallback(
         "destroy",
         camelTo_snake(resourceWithNamespace),
         { ...query, id: id },
-        params || {},
         headers,
         {
           isSingular: isSingular

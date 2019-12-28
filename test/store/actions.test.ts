@@ -23,7 +23,7 @@ function sharedTests(actions, state, apiUrlWithNamespace) {
       `${apiUrlWithNamespace}/articles`,
       { "headers": undefined }
     )
-    expect(commit).toHaveBeenCalledWith("setArticles", responseBody)
+    expect(commit).toHaveBeenCalledWith("setArticles", { query: undefined, records: responseBody })
   });
 
   test('send get request to show record', async () => {

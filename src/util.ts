@@ -1,6 +1,6 @@
 import pluralize from 'pluralize'
 
-const last = (xs) => { return xs[xs.length - 1] }
+export const last = (xs) => { return xs[xs.length - 1] }
 
 export function snake_toCamel(str) {
   return str.replace(/_[a-z]/g, match => match.slice(1).toUpperCase())
