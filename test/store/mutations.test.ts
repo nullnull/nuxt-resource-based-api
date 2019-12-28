@@ -18,7 +18,7 @@ function sharedTest(s, mutations) {
   const query = { userId: 1 }
 
   expect(s.articles).toEqual([]);
-  (mutations as any).setArticles(s, expectedArticles, query);
+  (mutations as any).setArticles(s, { records: expectedArticles, query: query });
   expect(s.articles).toEqual(expectedArticles)
   expect(s.lastQueryForIndex).toEqual(query)
 
