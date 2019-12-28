@@ -15,9 +15,14 @@ With this library, you can implement state/mutations/actions by following simple
 **store/index.js**
 ```js
 import Napi from 'nuxt-resource-based-api'
+import axios from 'axios'
+
+const axiosInstance = axios.create({
+  baseURL: 'https://api.awesome-task-manager.com'
+})
 
 Napi.setConfig({
-  apiUrl: 'https://api.awesome-task-manager.com'
+  axios: axiosInstance
 })
 ```
 
@@ -155,9 +160,14 @@ As minimum configuration, all you need to do just add following code.
 ```js
 // store/index.js
 import Napi from 'nuxt-resource-based-api'
+import axios from 'axios'
+
+const axiosInstance = axios.create({
+  baseURL: 'https://api.awesome-task-manager.com'
+})
 
 Napi.setConfig({
-    apiUrl: 'https://api.awesome-task-manager.com'
+  axios: axiosInstance
 })
 ```
 
