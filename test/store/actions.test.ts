@@ -24,7 +24,7 @@ function sharedTests(actions, state, apiNamespace) {
     const commit = jest.fn()
 
     await (actions as any).fetchArticles(mockedContext(state, commit), { force: true })
-    expect(axios.get).toHaveBeenCalledWith(
+    expect(mockedAxios.get).toHaveBeenCalledWith(
       `${apiNamespace}/articles`,
       { "headers": undefined }
     )
@@ -36,7 +36,7 @@ function sharedTests(actions, state, apiNamespace) {
 
     const id = 1
     await (actions as any).fetchArticle(mockedContext(state, commit), { id: id, force: true })
-    expect(axios.get).toHaveBeenCalledWith(
+    expect(mockedAxios.get).toHaveBeenCalledWith(
       `${apiNamespace}/articles/${id}`,
       { "headers": undefined }
     )
@@ -51,7 +51,7 @@ function sharedTests(actions, state, apiNamespace) {
       name: 'name1'
     }
     await (actions as any).createArticle(mockedContext(state, commit), { record })
-    expect(axios.post).toHaveBeenCalledWith(
+    expect(mockedAxios.post).toHaveBeenCalledWith(
       `${apiNamespace}/articles`,
       { "article": record },
       { "headers": undefined }
@@ -68,7 +68,7 @@ function sharedTests(actions, state, apiNamespace) {
       name: 'name1'
     }
     await (actions as any).updateArticle(mockedContext(state, commit), { record })
-    expect(axios.put).toHaveBeenCalledWith(
+    expect(mockedAxios.put).toHaveBeenCalledWith(
       `${apiNamespace}/articles/${record.id}`,
       { "article": record },
       { "headers": undefined }
@@ -82,7 +82,7 @@ function sharedTests(actions, state, apiNamespace) {
 
     const id = 1
     await (actions as any).destroyArticle(mockedContext(state, commit), { id })
-    expect(axios.delete).toHaveBeenCalledWith(
+    expect(mockedAxios.delete).toHaveBeenCalledWith(
       `${apiNamespace}/articles/${id}`,
       { "headers": undefined }
     )
@@ -92,10 +92,10 @@ function sharedTests(actions, state, apiNamespace) {
 
 describe('actions of createStore', () => {
   beforeEach(() => {
-    (axios as any).get = jest.fn((_url, _options) => { return { data: responseBody } });
-    (axios as any).post = jest.fn((_url, _body, _options) => { return { data: responseBody } });
-    (axios as any).delete = jest.fn((_url, _options) => { return {} });
-    (axios as any).put = jest.fn((_url, _body, _options) => { return { data: responseBody } });
+    (mockedAxios as any).get = jest.fn((_url, _options) => { return { data: responseBody } });
+    (mockedAxios as any).post = jest.fn((_url, _body, _options) => { return { data: responseBody } });
+    (mockedAxios as any).delete = jest.fn((_url, _options) => { return {} });
+    (mockedAxios as any).put = jest.fn((_url, _body, _options) => { return { data: responseBody } });
   });
 
   describe('with no namespace', () => {
