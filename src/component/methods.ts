@@ -1,5 +1,6 @@
 import { Resource, IndexMethod, ShowMethod, ShowMethodForSingular, NewMethod, CreateMethod, EditMethod, UpdateMethod, DestroyMethod } from "../index"
 import { createActionName } from "../util"
+import Vue from 'vue'
 
 interface Generator {
   index: (resource: string, callbacks: any) => { [x: string]: IndexMethod }
