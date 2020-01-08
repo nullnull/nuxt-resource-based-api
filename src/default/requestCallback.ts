@@ -1,5 +1,4 @@
 import pluralize from 'pluralize'
-import { URLSearchParams } from 'url'
 
 const actionToMethod = {
     index: 'get',
@@ -11,9 +10,8 @@ const actionToMethod = {
 }
 
 const getQueryStrings = (query): string => {
-    const searchParams = new (URLSearchParams || window.URLSearchParams)('')
-    Object.entries(query).forEach(([k, v]) => searchParams.append(k, v as string))
-    return searchParams.toString() === '' ? '' : '?' + searchParams.toString()
+    const queryString = Object.entries(query).map(([k, v]) => `${k}=${v}`).join('&')
+    return queryString === '' ? '' : '?' + queryString
 }
 
 export default function(axios) {
