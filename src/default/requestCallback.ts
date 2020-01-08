@@ -10,14 +10,14 @@ const actionToMethod = {
 }
 
 const getQueryStrings = (query): string => {
-    const queryString = Object.entries(query).map(([k, v]) => `${k}=${v}`).join('&')
+    const queryString = Object.entries(query).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v as string)}`).join('&')
     return queryString === '' ? '' : '?' + queryString
 }
 
 export default function(axios) {
     return async function (action, resource, query: object, headers, options, obj = {}) {
         const method = actionToMethod[action]
-        const id = { id: undefined, ...query }.id
+        const id = encodeURIComponent({ id: undefined, ...query }.id)
 
         if (action === 'index') {
             return await axios[method](`/${pluralize(resource)}${getQueryStrings(query)}`, {
