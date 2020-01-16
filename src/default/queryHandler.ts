@@ -19,12 +19,16 @@ export default (resourceWithNamespace: string, action: string, context: Context)
       return {}
     }
   } else {
-    const resourceFromPath = snake_toCamel(pathSplited[pathSplited.length - 2])
+    const regexps = [
+      new RegExp(`${pluralize(resource)}\/${queryAndParam.id}$`),
+      new RegExp(`${pluralize(resource)}\/${queryAndParam.id}\/`),
+    ]
+    
     if (queryAndParam[`${resource}Id`]) {
       return {
         id: queryAndParam[`${resource}Id`]
       }
-    } else if (queryAndParam.id && resourceFromPath === pluralize(resource)) {
+    } else if (queryAndParam.id && regexps.some(r => r.test(route.path))) {
       return {
         id: queryAndParam.id
       }
