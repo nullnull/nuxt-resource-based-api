@@ -16,10 +16,10 @@ function sharedTest(resource, action, path, expected) {
 }
 
 describe('actions of createStore', () => {
-  sharedTest('article', 'show', '/articles/1', { id: 1 })
-  sharedTest('article', 'show', '/articles/1/comments/2', { id: 1 })
-  sharedTest('article', 'show', '/users/2/articles/1', { id: 1 })
+  sharedTest('sharedArticle', 'show', '/shared_articles/1', { id: 1 })
+  sharedTest('sharedArticle', 'show', '/shared_articles/1/comments/2', { id: 1 })
+  sharedTest('sharedArticle', 'show', '/users/2/shared_articles/1', { id: 1 })
 
-  sharedTest('article', 'edit', '/articles/1/edit', { id: 1 })
-  sharedTest('article', 'edit', '/articles/1/edit?foo=2', { id: 1 })
+  sharedTest('sharedArticle', 'edit', '/shared_articles/1/edit', { id: 1 })
+  sharedTest('sharedArticle', 'edit', '/shared_articles/1/edit?foo=2', { id: 1 })
 })

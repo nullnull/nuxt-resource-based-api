@@ -1,5 +1,5 @@
 import pluralize from 'pluralize'
-import { last, snake_toCamel } from '../util'
+import { last, snake_toCamel, camelTo_snake } from '../util'
 type Context = any // TODO
 
 export default (resourceWithNamespace: string, action: string, context: Context): Object => {
@@ -20,8 +20,8 @@ export default (resourceWithNamespace: string, action: string, context: Context)
     }
   } else {
     const regexps = [
-      new RegExp(`${pluralize(resource)}\/${queryAndParam.id}$`),
-      new RegExp(`${pluralize(resource)}\/${queryAndParam.id}\/`),
+      new RegExp(`${camelTo_snake(pluralize(resource))}\/${queryAndParam.id}$`),
+      new RegExp(`${camelTo_snake(pluralize(resource))}\/${queryAndParam.id}\/`),
     ]
     
     if (queryAndParam[`${resource}Id`]) {
