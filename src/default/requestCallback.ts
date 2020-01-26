@@ -29,7 +29,7 @@ export default function(axios) {
             })
         } else if (['show', 'destroy'].includes(action)) {
             const path = options.isSingular ? resource : `${pluralize(resource)}/${id}`
-            return await axios[method](`/${path}`, {
+            return await axios[method](`/${path}${getQueryStrings(query)}`, {
                 headers: headers
             })
         } else if (['edit'].includes(action)) {
