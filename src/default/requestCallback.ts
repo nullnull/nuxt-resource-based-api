@@ -10,7 +10,10 @@ const actionToMethod = {
 }
 
 const getQueryStrings = (query): string => {
-    const queryString = Object.entries(query).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v as string)}`).join('&')
+    const queryString = Object.entries(query)
+        .filter(([k, v]) => k !== 'id')
+        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v as string)}`)
+        .join('&')
     return queryString === '' ? '' : '?' + queryString
 }
 
