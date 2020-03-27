@@ -12,7 +12,7 @@ export default (resourceWithNamespace: string, action: string, context: Context)
   const resource = last(resourceWithNamespace.split('/'))
 
   if (action === 'index') {
-    const resourceFromPath = snake_toCamel(pathSplited[pathSplited.length - 1])
+    const resourceFromPath = snake_toCamel(pathSplited[pathSplited.length - 1] || '')
     if (resourceFromPath === pluralize(resource)) {
       return queryAndParam
     } else {

@@ -2,11 +2,11 @@ import pluralize from 'pluralize'
 
 export const last = (xs) => { return xs[xs.length - 1] }
 
-export function snake_toCamel(str) {
+export function snake_toCamel(str: string) {
   return str.replace(/_[a-z]/g, match => match.slice(1).toUpperCase())
 }
 
-export function camelTo_snake(str) {
+export function camelTo_snake(str: string) {
   return str.replace(/[A-Z]/g, match => '_' + match.toLowerCase())
 }
 
