@@ -4,7 +4,7 @@ type Context = any // TODO
 
 export default (resourceWithNamespace: string, action: string, context: Context): Object => {
   const { route, query } = context
-  const pathSplited = route.path.split('/')
+  const pathSplited = route.path.split('/').filter(x => x)
   const queryAndParam = {
     ...query,
     ...route.params

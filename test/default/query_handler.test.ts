@@ -24,6 +24,14 @@ describe('default query handler', () => {
         path: '/users/1/comments'
       },
     }, { userId: 1 })
+
+    sharedTest('comment', 'index', {
+      query: {},
+      route: {
+        params: { userId: 1 },
+        path: '/users/1/comments/'
+      },
+    }, { userId: 1 })
   })
 
   describe('show action', () => {
